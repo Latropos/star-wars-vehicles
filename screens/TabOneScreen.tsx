@@ -16,7 +16,7 @@ export default function TabOneScreen ({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
-  const [selectedId, setSelectedId] = useState(null);
+  const [page, setPage] = useState(1);
 
   let nextItemId = 0;
 
@@ -31,6 +31,7 @@ export default function TabOneScreen ({ navigation }) {
     .then((json) => setData(json.results))
     .catch((error) => console.error(error))
     .finally(() => setLoading(false));
+
 
     
   }, []);
@@ -49,8 +50,19 @@ export default function TabOneScreen ({ navigation }) {
     );
   };
 
+
   function onEndReached (){
-    alert('End reached!');
+    console.log(page);
+    if (page<5){
+      setPage(page + 1)
+      console.log('https://swapi.dev/api/vehicles/?page=' + String(page))
+      
+      fetch('https://swapi.dev/api/vehicles/?page=' + String(page))
+      .then((response) => response.json())
+      .then((json) => setData(data.concat(json.results)))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+    }
   }
 
   return (

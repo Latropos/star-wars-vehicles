@@ -16,6 +16,11 @@ export default {
             screens: {
               TabOneScreen: 'one',
             },
+          Details: {
+              screens: {
+                DetailsScreen: 'details',
+              },
+            },
           },
           TabTwo: {
             screens: {
