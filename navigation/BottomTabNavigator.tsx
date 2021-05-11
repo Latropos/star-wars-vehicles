@@ -12,7 +12,8 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import DetailsScreen from '../screens/DetailsScreen';
+import { BottomTabParamList, TabOneParamList, TabTwoParamList, DetailsParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -29,7 +30,14 @@ export default function BottomTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
-      />
+      />      
+      <BottomTab.Screen
+        name="Details"
+        component={DetailsNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+      }}
+    />
       <BottomTab.Screen
         name="TabTwo"
         component={TabTwoNavigator}
@@ -74,5 +82,18 @@ function TabTwoNavigator() {
         options={{ headerTitle: 'Tab Two Title' }}
       />
     </TabTwoStack.Navigator>
+  );
+}
+const DetailsStack = createStackNavigator<DetailsParamList>();
+
+function DetailsNavigator() {
+  return (
+    <DetailsStack.Navigator>
+      <DetailsStack.Screen
+        name="DetailsScreen"
+        component={DetailsScreen}
+        options={{ headerTitle: 'Vehicle details:' }}
+      />
+    </DetailsStack.Navigator>
   );
 }
