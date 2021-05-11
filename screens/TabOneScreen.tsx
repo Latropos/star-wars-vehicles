@@ -1,15 +1,76 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+
+import { ActivityIndicator, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import { Text, View} from '../components/Themed';
 
-export default function TabOneScreen() {
+const Item = ({ item, onPress }) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item]}>
+    <Text style={[styles.title]}>{item.name}</Text>
+  </TouchableOpacity>
+);
+
+
+export default function TabOneScreen ({ navigation }) {
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
+  const [selectedId, setSelectedId] = useState(null);
+
+  let nextItemId = 0;
+
+  useEffect(() => {
+    fetch('https://swapi.dev/api/vehicles/')
+    .then((response) => response.json())
+    .then((json) => setCount(json.count))
+    .catch((error) => console.error(error));
+
+    fetch('https://swapi.dev/api/vehicles/')
+    .then((response) => response.json())
+    .then((json) => setData(json.results))
+    .catch((error) => console.error(error))
+    .finally(() => setLoading(false));
+
+    
+  }, []);
+
+  const renderItem = ({ item }) => {
+    item.id = item.url.split('/')[item.url.split('/').length - 2]
+
+    return (
+      <Item
+        item={item} 
+        onPress={() => navigation.navigate('Details', {
+          screen: 'Details',
+          params: { name: 'jane' },
+        })}
+      />
+    );
+  };
+
+  function onEndReached (){
+    alert('End reached!');
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+      <Text style={styles.title}>Star wars wehicles</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      
+      <View style={{ flex: 1, padding: 24 }}>
+      <Text style={styles.count}>Total: {count}</Text>
+      {isLoading ? <ActivityIndicator/> : (
+        <FlatList
+          onEndReached={onEndReached}
+
+          onEndReachedThreshold={0.5}
+          data={data}
+          keyExtractor={(item, index) => item.url}
+          renderItem={renderItem}
+        />
+      )}
+    </View>
     </View>
   );
 }
@@ -21,6 +82,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  count: {
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -28,5 +93,12 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  item: {
+    padding: 20,
+    borderRadius: 5,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    backgroundColor: 'peru'
   },
 });
