@@ -1,18 +1,19 @@
-import { Vehicle } from "./models";
+import { Vehicle, VehicleList } from "./types";
 
 const fetchAPI = {
-  getVehiclesList: async function (page: number): Promise<[]> {
+  getVehiclesListAndCount: async function (
+    page: number
+  ): Promise<[VehicleList, number]> {
     let url = `https://swapi.dev/api/vehicles/?page=${page}`;
     const response = await fetch(url);
     const json = await response.json();
-    return json.results;
+    return [json.results, json.count];
   },
-
-  getVehiclesCount: async function (): Promise<number> {
-    let url = "https://swapi.dev/api/vehicles/";
+  nextPageVehiclesExists: async function (page: number) {
+    let url = `https://swapi.dev/api/vehicles/?page=${page}`;
     const response = await fetch(url);
     const json = await response.json();
-    return json.count;
+    return json.next != null;
   },
   getVehicle: async function (id: number): Promise<Vehicle> {
     let url = `https://swapi.dev/api/vehicles/${id}`;

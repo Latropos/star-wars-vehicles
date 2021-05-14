@@ -1,3 +1,4 @@
+import { getFocusedRouteNameFromRoute } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 
 import {
@@ -9,7 +10,7 @@ import {
 
 import { Text, View } from "../components/Themed";
 import fetchAPI from "../fetchApi";
-import { Vehicle } from "../models";
+import { Vehicle } from "../types";
 
 interface ItemProps {
   item: Vehicle;
@@ -27,29 +28,27 @@ export default function VehicleListScreen({ navigation }) {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [page, setPage] = useState(1);
+  const [nextPageExists, setNextPageExists] = useState(true);
 
-  async function loadNewPage() {
-    const results = await fetchAPI.getVehiclesList(page);
+  async function loadThisPage() {
+    const [results, num_of_results] = await fetchAPI.getVehiclesListAndCount(
+      page
+    );
     setData(data.concat(results));
+    setCount(num_of_results);
+    setNextPageExists(await fetchAPI.nextPageVehiclesExists(page));
     setPage(page + 1);
   }
 
-  async function loadCount() {
-    const no_results = await fetchAPI.getVehiclesCount();
-    setCount(no_results);
-  }
   useEffect(() => {
-    loadCount();
-    loadNewPage();
+    loadThisPage();
     setLoading(false);
   }, []);
 
   const renderItem = ({ item }) => {
-    if (item != undefined)
-      var item_unique = {
-        ...item,
-        id: item.url.split("/")[item.url.split("/").length - 2],
-      };
+    function getId({ item }) {
+      return item.url.split("/")[item.url.split("/").length - 2];
+    }
 
     return (
       <Item
@@ -57,7 +56,7 @@ export default function VehicleListScreen({ navigation }) {
         onPress={() =>
           navigation.navigate("Details", {
             screen: "Details",
-            id: item_unique.id,
+            id: getId({ item }),
           })
         }
       />
@@ -65,8 +64,8 @@ export default function VehicleListScreen({ navigation }) {
   };
 
   function onEndReached() {
-    if (page < 5) {
-      loadNewPage();
+    if (nextPageExists) {
+      loadThisPage();
     }
   }
 
@@ -81,7 +80,7 @@ export default function VehicleListScreen({ navigation }) {
 
       <View style={{ flex: 1, padding: 24 }}>
         <Text style={styles.count}>Total: {count}</Text>
-        {isLoading ? (
+        {!data ? (
           <ActivityIndicator />
         ) : (
           <FlatList

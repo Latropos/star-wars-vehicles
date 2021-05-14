@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { Text, View } from "../components/Themed";
-import { Vehicle } from "../models";
+import { Vehicle } from "../types";
 import fetchAPI from "../fetchApi";
 
 interface DetailsItemProps {
@@ -26,14 +26,15 @@ const emptyVehicle = (): Vehicle => ({
 
 export default function VehicleDetailsScreen({ navigation, route }) {
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState<Vehicle>(emptyVehicle);
+  //TODO
+  const [vehicle, setVehicle] = useState<Vehicle | undefined>(emptyVehicle);
 
   useEffect(() => {
     async function loadVehicle() {
       let id: number = route.params.id;
 
       const json = await fetchAPI.getVehicle(id);
-      setData(json);
+      setVehicle(json);
     }
     loadVehicle();
     setLoading(false);
@@ -52,15 +53,15 @@ export default function VehicleDetailsScreen({ navigation, route }) {
         <ActivityIndicator />
       ) : (
         <View>
-          <DetailsItem name="Name" value={data.name} />
-          <DetailsItem name="Model" value={data.model} />
-          <DetailsItem name="Manufacturer" value={data.manufacturer} />
-          <DetailsItem name="Cost in credits" value={data.cost_in_credits} />
+          <DetailsItem name="Name" value={vehicle.name} />
+          <DetailsItem name="Model" value={vehicle.model} />
+          <DetailsItem name="Manufacturer" value={vehicle.manufacturer} />
+          <DetailsItem name="Cost in credits" value={vehicle.cost_in_credits} />
           <DetailsItem
             name="Max atm speed"
-            value={data.max_atmosphering_speed}
+            value={vehicle.max_atmosphering_speed}
           />
-          <DetailsItem name="Passengers" value={data.passengers} />
+          <DetailsItem name="Passengers" value={vehicle.passengers} />
         </View>
       )}
     </View>
