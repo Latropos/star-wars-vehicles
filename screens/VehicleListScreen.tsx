@@ -7,43 +7,49 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { Text, View } from "../components/Themed";
+import fetchAPI from "../fetchApi";
+import { Vehicle } from "../models";
 
-const Item = ({ item, onPress }) => (
+interface ItemProps {
+  item: Vehicle;
+  onPress: () => void;
+}
+
+const Item = ({ item, onPress }: ItemProps) => (
   <TouchableOpacity onPress={onPress} style={[styles.item]}>
     <Text style={[styles.title]}>{item.name}</Text>
   </TouchableOpacity>
 );
 
-export default function TabOneScreen({ navigation }) {
+export default function VehicleListScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
-  const [page, setPage] = useState(1); 
+  const [page, setPage] = useState(1);
 
-  let nextItemId = 0;
-
-  async function fetchAPI(){
-    let url = "https://swapi.dev/api/vehicles/?page=" + String(page);
-    console.log(url);
-    let config = {};
-    const response = await fetch(url);
-    const json = await response.json();
-
-    setData(data.concat(json.results));
-    setCount(json.count);
-    setLoading(false);    
-    setPage(page + 1);   
+  async function loadNewPage() {
+    const results = await fetchAPI.getVehiclesList(page);
+    setData(data.concat(results));
+    setPage(page + 1);
   }
 
+  async function loadCount() {
+    const no_results = await fetchAPI.getVehiclesCount();
+    setCount(no_results);
+  }
   useEffect(() => {
-    fetchAPI();
+    loadCount();
+    loadNewPage();
+    setLoading(false);
   }, []);
 
   const renderItem = ({ item }) => {
-    item.id = item.url.split("/")[item.url.split("/").length - 2];
+    if (item != undefined)
+      var item_unique = {
+        ...item,
+        id: item.url.split("/")[item.url.split("/").length - 2],
+      };
 
     return (
       <Item
@@ -51,7 +57,7 @@ export default function TabOneScreen({ navigation }) {
         onPress={() =>
           navigation.navigate("Details", {
             screen: "Details",
-            id: item.id ,
+            id: item_unique.id,
           })
         }
       />
@@ -59,9 +65,8 @@ export default function TabOneScreen({ navigation }) {
   };
 
   function onEndReached() {
-    console.log(page);
     if (page < 5) {
-      fetchAPI();
+      loadNewPage();
     }
   }
 
@@ -83,7 +88,7 @@ export default function TabOneScreen({ navigation }) {
             onEndReached={onEndReached}
             onEndReachedThreshold={0.5}
             data={data}
-            keyExtractor={(item, index) => item.url}
+            keyExtractor={(item) => item.url}
             renderItem={renderItem}
           />
         )}
