@@ -5,7 +5,7 @@ function handle_error() {}
 const fetchAPI = {
   getVehiclesListAndCount: async function (
     page: number
-  ): Promise<[VehicleList, number]> {
+  ): Promise<[[], number]> {
     try {
       let url = `https://swapi.dev/api/vehicles/?page=${page}`;
       const response = await fetch(url);

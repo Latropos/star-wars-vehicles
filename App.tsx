@@ -18,8 +18,8 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="One">
-          <Stack.Screen name="One" component={VehicleListScreen} />
+        <Stack.Navigator initialRouteName="Vehicles">
+          <Stack.Screen name="Vehicles" component={VehicleListScreen} />
           <Stack.Screen name="Details" component={VehicleDetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
