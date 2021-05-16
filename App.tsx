@@ -1,28 +1,66 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DrawerActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import {
+    createDrawerNavigator,
+    DrawerContentScrollView,
+    DrawerItemList,
+    DrawerItem,
+} from "@react-navigation/drawer";
 import useCachedResources from "./hooks/useCachedResources";
-import useColorScheme from "./hooks/useColorScheme";
 import VehicleListScreen from "./screens/VehicleListScreen";
 import VehicleDetailsScreen from "./screens/VehicleDetailsScreen";
+import { View, Text, Button, StyleSheet } from "react-native";
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function CustomDrawerContent({ navigation }) {
+    return (
+        <DrawerContentScrollView>
+            <DrawerItem
+                label="Vehicles"
+                onPress={() => navigation.navigate("Vehicles")}
+                labelStyle={styles.drawerLabel}
+            />
+        </DrawerContentScrollView>
+    );
+}
 
 export default function App() {
-  const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+    const isLoadingComplete = useCachedResources();
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Vehicles">
-          <Stack.Screen name="Vehicles" component={VehicleListScreen} />
-          <Stack.Screen name="Details" component={VehicleDetailsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
+    if (!isLoadingComplete) {
+        return null;
+    } else {
+        return (
+            <NavigationContainer>
+                <Drawer.Navigator
+                    initialRouteName="Vehicles"
+                    openByDefault={true}
+                    overlayColor="transparent"
+                    drawerStyle={styles.drawer}
+                    drawerContent={CustomDrawerContent}
+                >
+                    <Drawer.Screen
+                        name="Vehicles"
+                        component={VehicleListScreen}
+                    />
+                    <Drawer.Screen
+                        name="VehicleDetails"
+                        component={VehicleDetailsScreen}
+                    />
+                </Drawer.Navigator>
+            </NavigationContainer>
+        );
+    }
 }
+
+const styles = StyleSheet.create({
+    drawer: {
+        backgroundColor: "#c6cbef",
+        width: 240,
+    },
+    drawerLabel: {
+        fontSize: 20,
+    },
+});

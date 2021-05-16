@@ -1,4 +1,3 @@
-import { getFocusedRouteNameFromRoute } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -7,7 +6,7 @@ import {
     StyleSheet,
 } from "react-native";
 
-import { Text, View } from "../components/Themed";
+import { Text, View } from "react-native";
 import fetchAPI from "../fetchApi";
 import {
     Vehicle,
@@ -24,7 +23,7 @@ interface ItemProps {
 
 const Item = ({ item, onPress }: ItemProps) =>
     item === undefined ? (
-        <Text>Blag</Text>
+        <Text></Text>
     ) : (
         <TouchableOpacity onPress={onPress} style={[styles.item]}>
             <Text style={[styles.title]}>{item.name}</Text>
@@ -60,8 +59,8 @@ export default function VehicleListScreen({ navigation }) {
             <Item
                 item={item}
                 onPress={() =>
-                    navigation.navigate("Details", {
-                        screen: "Details",
+                    navigation.navigate("VehicleDetails", {
+                        screen: "VehicleDetails",
                         id: getId({ item }),
                     })
                 }
@@ -86,6 +85,13 @@ export default function VehicleListScreen({ navigation }) {
     }
     return (
         <View style={styles.container}>
+            <View
+                style={{
+                    borderBottomColor: "black",
+                    borderBottomWidth: 1,
+                    padding: 40,
+                }}
+            />
             <Text style={styles.title}>Sort by:</Text>
             <View style={styles.sortBar}>
                 <TouchableOpacity style={styles.button} onPress={sortByName}>
@@ -98,7 +104,6 @@ export default function VehicleListScreen({ navigation }) {
                     <Text style={styles.title}>Crew</Text>
                 </TouchableOpacity>
             </View>
-
             <View style={{ flex: 1, padding: 24 }}>
                 <Text style={styles.count}>Total: {count}</Text>
                 {!data ? (
