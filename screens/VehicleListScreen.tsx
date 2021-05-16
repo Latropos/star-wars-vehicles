@@ -4,9 +4,9 @@ import {
     FlatList,
     TouchableOpacity,
     StyleSheet,
+    Text,
+    View,
 } from "react-native";
-
-import { Text, View } from "react-native";
 import fetchAPI from "../fetchApi";
 import {
     Vehicle,
@@ -15,6 +15,7 @@ import {
     sortVehicleListByLength,
     sortVehicleListByCrew,
 } from "../types";
+import { Ionicons } from "@expo/vector-icons";
 
 interface ItemProps {
     item: Vehicle;
@@ -30,6 +31,7 @@ const Item = ({ item, onPress }: ItemProps) =>
         </TouchableOpacity>
     );
 
+//--------------------------------------------------------
 export default function VehicleListScreen({ navigation }) {
     const [data, setData] = useState<VehicleList>([]);
     const [count, setCount] = useState(0);
@@ -73,6 +75,7 @@ export default function VehicleListScreen({ navigation }) {
         }
     }
 
+    //sortiong functions:
     function sortByName() {
         setData(sortVehicleListByName(data));
     }
@@ -91,6 +94,9 @@ export default function VehicleListScreen({ navigation }) {
                     padding: 40,
                 }}
             />
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                <Ionicons name="md-menu" size={32} color="black" />
+            </TouchableOpacity>
             <Text style={styles.title}>Sort by:</Text>
             <View style={styles.sortBar}>
                 <TouchableOpacity style={styles.button} onPress={sortByName}>
@@ -123,6 +129,7 @@ export default function VehicleListScreen({ navigation }) {
     );
 }
 
+//---------------styles-------------------
 const styles = StyleSheet.create({
     container: {
         flex: 1,

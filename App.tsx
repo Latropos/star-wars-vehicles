@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import { NavigationContainer, DrawerActions } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import {
     createDrawerNavigator,
     DrawerContentScrollView,
@@ -8,10 +8,10 @@ import {
     DrawerItem,
 } from "@react-navigation/drawer";
 import useCachedResources from "./hooks/useCachedResources";
+
 import VehicleListScreen from "./screens/VehicleListScreen";
 import VehicleDetailsScreen from "./screens/VehicleDetailsScreen";
 import MovieListScreen from "./screens/MovieListScreen";
-import { View, Text, Button, StyleSheet } from "react-native";
 
 const Drawer = createDrawerNavigator();
 
@@ -32,7 +32,9 @@ function CustomDrawerContent({ navigation }) {
     );
 }
 
+//---------------------------------
 export default function App() {
+    const [isOpen, setOpen] = useState(false);
     const isLoadingComplete = useCachedResources();
 
     if (!isLoadingComplete) {
@@ -42,7 +44,6 @@ export default function App() {
             <NavigationContainer>
                 <Drawer.Navigator
                     initialRouteName="Vehicles"
-                    openByDefault={true}
                     overlayColor="transparent"
                     drawerStyle={styles.drawer}
                     drawerContent={CustomDrawerContent}
@@ -62,6 +63,7 @@ export default function App() {
     }
 }
 
+//---------------styles-------------------
 const styles = StyleSheet.create({
     drawer: {
         backgroundColor: "#c6cbef",

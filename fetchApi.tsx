@@ -3,6 +3,7 @@ import { Vehicle, VehicleList } from "./types";
 
 function handle_error() {}
 const fetchAPI = {
+    //---------------Vehicles------------------
     getVehiclesListAndCount: async function (
         page: number
     ): Promise<[[], number]> {
@@ -33,6 +34,7 @@ const fetchAPI = {
         const json = await response.json();
         return json;
     },
+    //------------------Movies------------------------
     getMovies: async function () {
         let url = `https://swapi.dev/api/films/`;
         const response = await fetch(url);

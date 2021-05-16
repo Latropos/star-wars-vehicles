@@ -5,20 +5,10 @@ import { Text, View } from "react-native";
 import fetchAPI from "../fetchApi";
 import { Movie } from "../types";
 import Accordion from "react-native-collapsible/Accordion";
-import { Assets } from "@react-navigation/stack";
+import { Ionicons } from "@expo/vector-icons";
 
-const SECTIONS = [
-    {
-        title: "First",
-        content: "Lorem ipsum...",
-    },
-    {
-        title: "Second",
-        content: "Lorem ipsum...",
-    },
-];
-
-export default function MovieListScreen({}) {
+//---------------------------------------------------------
+export default function MovieListScreen({ navigation }) {
     const [movies, setMovies] = useState<Array<Movie>>([]);
     const [state, setState] = useState<Array<number>>([]);
 
@@ -30,19 +20,11 @@ export default function MovieListScreen({}) {
         loadMovies();
     }, []);
 
-    const renderItem = ({ item }) => {
-        return <Text>{item.title}</Text>;
-    };
-
     return (
         <View style={styles.container}>
-            <View
-                style={{
-                    borderBottomColor: "black",
-                    borderBottomWidth: 1,
-                    padding: 40,
-                }}
-            />
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                <Ionicons name="md-menu" size={32} color="black" />
+            </TouchableOpacity>
             <Text style={styles.title}>Movies</Text>
             {!movies ? (
                 <ActivityIndicator />
@@ -67,6 +49,7 @@ export default function MovieListScreen({}) {
     );
 }
 
+//---------------styles-------------------
 const styles = StyleSheet.create({
     container: {
         flex: 1,
