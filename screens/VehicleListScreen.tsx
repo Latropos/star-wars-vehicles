@@ -47,7 +47,6 @@ export default function VehicleListScreen({ navigation }) {
 
     useEffect(() => {
         loadThisPage();
-        console.log(data);
     }, []);
 
     const renderItem = ({ item }) => {

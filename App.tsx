@@ -10,6 +10,7 @@ import {
 import useCachedResources from "./hooks/useCachedResources";
 import VehicleListScreen from "./screens/VehicleListScreen";
 import VehicleDetailsScreen from "./screens/VehicleDetailsScreen";
+import MovieListScreen from "./screens/MovieListScreen";
 import { View, Text, Button, StyleSheet } from "react-native";
 
 const Drawer = createDrawerNavigator();
@@ -20,6 +21,11 @@ function CustomDrawerContent({ navigation }) {
             <DrawerItem
                 label="Vehicles"
                 onPress={() => navigation.navigate("Vehicles")}
+                labelStyle={styles.drawerLabel}
+            />
+            <DrawerItem
+                label="Movies"
+                onPress={() => navigation.navigate("Movies")}
                 labelStyle={styles.drawerLabel}
             />
         </DrawerContentScrollView>
@@ -49,6 +55,7 @@ export default function App() {
                         name="VehicleDetails"
                         component={VehicleDetailsScreen}
                     />
+                    <Drawer.Screen name="Movies" component={MovieListScreen} />
                 </Drawer.Navigator>
             </NavigationContainer>
         );
