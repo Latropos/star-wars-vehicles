@@ -8,6 +8,7 @@ import {
     View,
 } from "react-native";
 import fetchAPI from "../../fetchApi";
+import service from "../../service";
 import { Vehicle, VehicleList } from "../../types";
 
 interface ItemProps {
@@ -53,17 +54,13 @@ export default function VehicleListScreen({ navigation }) {
     }, []);
 
     const renderItem = ({ item }) => {
-        function getId({ item }) {
-            return item.url.split("/")[item.url.split("/").length - 2];
-        }
-
         return (
             <Item
                 item={item}
                 onPress={() =>
                     navigation.navigate("VehicleDetails", {
                         screen: "VehicleDetails",
-                        id: getId({ item }),
+                        id: service.getId({ item }),
                     })
                 }
             />
