@@ -29,15 +29,23 @@ export default function VehicleListScreen({ navigation }) {
     const [data, setData] = useState<VehicleList>([]);
     const [count, setCount] = useState(0);
     const [page, setPage] = useState(1);
-    const [nextPageExists, setNextPageExists] = useState<boolean | 0>(true);
+    const [errorMessage, setErrorMessage] = useState<string>(undefined);
+    const [nextPageExists, setNextPageExists] = useState(true);
 
     async function loadThisPage() {
-        const [results, num_of_results] =
-            await fetchAPI.getVehiclesListAndCount(page);
-        setData(data.concat(results));
-        setCount(num_of_results);
-        setNextPageExists(await fetchAPI.nextPageVehiclesExists(page));
-        setPage(page + 1);
+        setErrorMessage(undefined);
+        try {
+            const [results, num_of_results, next_page_existst] =
+                await fetchAPI.getVehiclesListAndCount(page);
+
+            setData(data.concat(results));
+            setCount(num_of_results);
+            setNextPageExists(next_page_existst);
+
+            setPage(page + 1);
+        } catch (err) {
+            setErrorMessage("Sorry, we can't fetch your API");
+        }
     }
 
     useEffect(() => {
@@ -106,6 +114,7 @@ export default function VehicleListScreen({ navigation }) {
                     <Text style={styles.title}>Crew</Text>
                 </TouchableOpacity>
             </View>
+            {errorMessage ? <Text> {errorMessage}</Text> : <Text></Text>}
             <View style={{ flex: 1, padding: 24 }}>
                 <Text style={styles.count}>Total: {count}</Text>
                 {!data ? (
