@@ -16,7 +16,6 @@ const DetailsItem = ({ name, value }: DetailsItemProps) => (
 
 export default function VehicleDetailsScreen({ route }) {
     const [isLoading, setLoading] = useState(true);
-    //TODO
     const [vehicle, setVehicle] = useState<Vehicle | undefined>();
 
     useEffect(() => {
@@ -25,9 +24,9 @@ export default function VehicleDetailsScreen({ route }) {
 
             const json = await fetchAPI.getVehicle(id);
             setVehicle(json);
+            setLoading(false);
         }
         loadVehicle();
-        setLoading(false);
     }, []);
 
     return (

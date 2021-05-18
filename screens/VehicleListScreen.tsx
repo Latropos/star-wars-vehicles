@@ -8,13 +8,7 @@ import {
     View,
 } from "react-native";
 import fetchAPI from "../fetchApi";
-import {
-    Vehicle,
-    VehicleList,
-    sortVehicleListByName,
-    sortVehicleListByLength,
-    sortVehicleListByCrew,
-} from "../types";
+import { Vehicle, VehicleList } from "../types";
 import { Ionicons } from "@expo/vector-icons";
 
 interface ItemProps {
@@ -30,6 +24,17 @@ const Item = ({ item, onPress }: ItemProps) =>
             <Text style={[styles.title]}>{item.name}</Text>
         </TouchableOpacity>
     );
+
+//---------------sorting------------------
+function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
+}
+function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
+}
+function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
+}
 
 //--------------------------------------------------------
 export default function VehicleListScreen({ navigation }) {
