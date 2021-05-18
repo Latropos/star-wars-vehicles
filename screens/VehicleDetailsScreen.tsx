@@ -14,21 +14,10 @@ const DetailsItem = ({ name, value }: DetailsItemProps) => (
     </Text>
 );
 
-const emptyVehicle = (): Vehicle => ({
-    name: "---",
-    model: "---",
-    manufacturer: "",
-    cost_in_credits: "",
-    max_atmosphering_speed: "",
-    passengers: "",
-    length: 0,
-    crew: 0,
-});
-
 export default function VehicleDetailsScreen({ route }) {
     const [isLoading, setLoading] = useState(true);
     //TODO
-    const [vehicle, setVehicle] = useState<Vehicle | undefined>(emptyVehicle);
+    const [vehicle, setVehicle] = useState<Vehicle | undefined>();
 
     useEffect(() => {
         async function loadVehicle() {
@@ -43,11 +32,7 @@ export default function VehicleDetailsScreen({ route }) {
 
     return (
         <View style={styles.container}>
-            <View
-                style={styles.separator}
-                lightColor="#eee"
-                darkColor="rgba(255,255,255,0.1)"
-            />
+            <View style={styles.separator} />
 
             {isLoading ? (
                 <ActivityIndicator />

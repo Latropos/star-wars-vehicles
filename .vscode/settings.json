@@ -1,5 +1,5 @@
 {
-  "terminal.integrated.cwd": "prett",
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "terminal.integrated.cwd": "prett",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
