@@ -9,13 +9,8 @@ import {
 
 import { Text, View } from "../components/Themed";
 import fetchAPI from "../fetchApi";
-import {
-    Vehicle,
-    VehicleList,
-    sortVehicleListByName,
-    sortVehicleListByLength,
-    sortVehicleListByCrew,
-} from "../types";
+import { Vehicle, VehicleList } from "../types";
+import { Ionicons } from "@expo/vector-icons";
 
 interface ItemProps {
     item: Vehicle;
@@ -31,6 +26,18 @@ const Item = ({ item, onPress }: ItemProps) =>
         </TouchableOpacity>
     );
 
+//---------------sorting------------------
+function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
+}
+function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
+}
+function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
+}
+
+//--------------------------------------------------------
 export default function VehicleListScreen({ navigation }) {
     const [data, setData] = useState<VehicleList>([]);
     const [count, setCount] = useState(0);

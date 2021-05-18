@@ -15,21 +15,9 @@ const DetailsItem = ({ name, value }: DetailsItemProps) => (
     </Text>
 );
 
-const emptyVehicle = (): Vehicle => ({
-    name: "---",
-    model: "---",
-    manufacturer: "",
-    cost_in_credits: "",
-    max_atmosphering_speed: "",
-    passengers: "",
-    length: 0,
-    crew: 0,
-});
-
 export default function VehicleDetailsScreen({ route }) {
     const [isLoading, setLoading] = useState(true);
-    //TODO
-    const [vehicle, setVehicle] = useState<Vehicle | undefined>(emptyVehicle);
+    const [vehicle, setVehicle] = useState<Vehicle | undefined>();
 
     useEffect(() => {
         async function loadVehicle() {
@@ -37,9 +25,9 @@ export default function VehicleDetailsScreen({ route }) {
 
             const json = await fetchAPI.getVehicle(id);
             setVehicle(json);
+            setLoading(false);
         }
         loadVehicle();
-        setLoading(false);
     }, []);
 
     return (

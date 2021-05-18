@@ -10,12 +10,7 @@ export interface Vehicle {
 }
 export type VehicleList = Array<Vehicle>;
 
-export function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
-    return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
-}
-export function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
-    return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
-}
-export function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
-    return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
+export interface Movie {
+    title: string;
+    opening_crawl: string;
 }
