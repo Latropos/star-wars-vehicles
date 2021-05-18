@@ -1,125 +1,159 @@
 import { getFocusedRouteNameFromRoute } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
-
 import {
-  ActivityIndicator,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
+    ActivityIndicator,
+    FlatList,
+    TouchableOpacity,
+    StyleSheet,
 } from "react-native";
 
 import { Text, View } from "../components/Themed";
 import fetchAPI from "../fetchApi";
-import { Vehicle } from "../types";
+import { Vehicle, VehicleList } from "../types";
+import { Ionicons } from "@expo/vector-icons";
 
 interface ItemProps {
-  item: Vehicle;
-  onPress: () => void;
+    item: Vehicle;
+    onPress: () => void;
 }
 
-const Item = ({ item, onPress }: ItemProps) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item]}>
-    <Text style={[styles.title]}>{item.name}</Text>
-  </TouchableOpacity>
-);
+const Item = ({ item, onPress }: ItemProps) =>
+    item === undefined ? (
+        <Text>Blag</Text>
+    ) : (
+        <TouchableOpacity onPress={onPress} style={[styles.item]}>
+            <Text style={[styles.title]}>{item.name}</Text>
+        </TouchableOpacity>
+    );
 
+//---------------sorting------------------
+function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
+}
+function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
+}
+function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
+}
+
+//--------------------------------------------------------
 export default function VehicleListScreen({ navigation }) {
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [count, setCount] = useState(0);
-  const [page, setPage] = useState(1);
-  const [nextPageExists, setNextPageExists] = useState(true);
+    const [data, setData] = useState<VehicleList>([]);
+    const [count, setCount] = useState(0);
+    const [page, setPage] = useState(1);
+    const [nextPageExists, setNextPageExists] = useState<boolean | 0>(true);
 
-  async function loadThisPage() {
-    const [results, num_of_results] = await fetchAPI.getVehiclesListAndCount(
-      page
-    );
-    setData(data.concat(results));
-    setCount(num_of_results);
-    setNextPageExists(await fetchAPI.nextPageVehiclesExists(page));
-    setPage(page + 1);
-  }
-
-  useEffect(() => {
-    loadThisPage();
-    setLoading(false);
-  }, []);
-
-  const renderItem = ({ item }) => {
-    function getId({ item }) {
-      return item.url.split("/")[item.url.split("/").length - 2];
+    async function loadThisPage() {
+        const [results, num_of_results] =
+            await fetchAPI.getVehiclesListAndCount(page);
+        setData(data.concat(results));
+        setCount(num_of_results);
+        setNextPageExists(await fetchAPI.nextPageVehiclesExists(page));
+        setPage(page + 1);
     }
 
-    return (
-      <Item
-        item={item}
-        onPress={() =>
-          navigation.navigate("Details", {
-            screen: "Details",
-            id: getId({ item }),
-          })
+    useEffect(() => {
+        loadThisPage();
+        console.log(data);
+    }, []);
+
+    const renderItem = ({ item }) => {
+        function getId({ item }) {
+            return item.url.split("/")[item.url.split("/").length - 2];
         }
-      />
-    );
-  };
 
-  function onEndReached() {
-    if (nextPageExists) {
-      loadThisPage();
+        return (
+            <Item
+                item={item}
+                onPress={() =>
+                    navigation.navigate("Details", {
+                        screen: "Details",
+                        id: getId({ item }),
+                    })
+                }
+            />
+        );
+    };
+
+    function onEndReached() {
+        if (nextPageExists) {
+            loadThisPage();
+        }
     }
-  }
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Star wars wehicles</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
+    function sortByName() {
+        setData(sortVehicleListByName(data));
+    }
+    function sortByLength() {
+        setData(sortVehicleListByLength(data));
+    }
+    function sortByCrew() {
+        setData(sortVehicleListByCrew(data));
+    }
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Sort by:</Text>
+            <View style={styles.sortBar}>
+                <TouchableOpacity style={styles.button} onPress={sortByName}>
+                    <Text style={styles.title}>Name</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={sortByLength}>
+                    <Text style={styles.title}>Length</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={sortByCrew}>
+                    <Text style={styles.title}>Crew</Text>
+                </TouchableOpacity>
+            </View>
 
-      <View style={{ flex: 1, padding: 24 }}>
-        <Text style={styles.count}>Total: {count}</Text>
-        {!data ? (
-          <ActivityIndicator />
-        ) : (
-          <FlatList
-            onEndReached={onEndReached}
-            onEndReachedThreshold={0.5}
-            data={data}
-            keyExtractor={(item) => item.url}
-            renderItem={renderItem}
-          />
-        )}
-      </View>
-    </View>
-  );
+            <View style={{ flex: 1, padding: 24 }}>
+                <Text style={styles.count}>Total: {count}</Text>
+                {!data ? (
+                    <ActivityIndicator />
+                ) : (
+                    <FlatList
+                        onEndReached={onEndReached}
+                        onEndReachedThreshold={0.5}
+                        data={data}
+                        keyExtractor={(item, index) =>
+                            item === undefined ? 1 : item.url
+                        }
+                        renderItem={renderItem}
+                    />
+                )}
+            </View>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-  count: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  item: {
-    padding: 20,
-    borderRadius: 5,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    backgroundColor: "peru",
-  },
+    container: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    sortBar: {
+        flexDirection: "row",
+    },
+    button: {
+        backgroundColor: "cornflowerblue",
+        padding: 10,
+        borderRadius: 5,
+        margin: 5,
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: "bold",
+    },
+    count: {
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    item: {
+        padding: 10,
+        borderRadius: 5,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        backgroundColor: "peru",
+    },
 });
