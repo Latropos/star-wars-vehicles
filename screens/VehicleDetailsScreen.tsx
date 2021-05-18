@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
-import { Text, View } from "../components/Themed";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { Vehicle } from "../types";
 import fetchAPI from "../fetchApi";
 
@@ -32,11 +31,7 @@ export default function VehicleDetailsScreen({ route }) {
 
     return (
         <View style={styles.container}>
-            <View
-                style={styles.separator}
-                lightColor="#eee"
-                darkColor="rgba(255,255,255,0.1)"
-            />
+            <View style={styles.separator} />
 
             {isLoading ? (
                 <ActivityIndicator />

@@ -7,8 +7,15 @@ export interface Vehicle {
     passengers: string;
     crew: number;
     length: number;
+    url: string;
 }
+
 export type VehicleList = Array<Vehicle>;
+
+export interface Movie {
+    title: string;
+    opening_crawl: string;
+}
 
 export interface Movie {
     title: string;
