@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { Vehicle } from "../types";
-import fetchAPI from "../fetchApi";
+import { Vehicle } from "../../types";
+import fetchAPI from "../../fetchApi";
 
 interface DetailsItemProps {
     name: string;

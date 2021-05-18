@@ -7,9 +7,8 @@ import {
     Text,
     View,
 } from "react-native";
-import fetchAPI from "../fetchApi";
-import { Vehicle, VehicleList } from "../types";
-import { Ionicons } from "@expo/vector-icons";
+import fetchAPI from "../../fetchApi";
+import { Vehicle, VehicleList } from "../../types";
 
 interface ItemProps {
     item: Vehicle;
@@ -25,18 +24,7 @@ const Item = ({ item, onPress }: ItemProps) =>
         </TouchableOpacity>
     );
 
-//---------------sorting------------------
-function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
-    return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
-}
-function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
-    return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
-}
-function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
-    return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
-}
-
-//--------------------------------------------------------
+//#region -------------------------------------------------
 export default function VehicleListScreen({ navigation }) {
     const [data, setData] = useState<VehicleList>([]);
     const [count, setCount] = useState(0);
@@ -79,8 +67,20 @@ export default function VehicleListScreen({ navigation }) {
             loadThisPage();
         }
     }
+    //#endregion
 
-    //sortiong functions:
+    //#region ---------------sorting------------------
+    function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
+        return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
+    }
+    function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
+        return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
+    }
+    function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
+        return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
+    }
+
+    //buttons:
     function sortByName() {
         setData(sortVehicleListByName(data));
     }
@@ -90,18 +90,10 @@ export default function VehicleListScreen({ navigation }) {
     function sortByCrew() {
         setData(sortVehicleListByCrew(data));
     }
+
+    //#endregion
     return (
         <View style={styles.container}>
-            <View
-                style={{
-                    borderBottomColor: "black",
-                    borderBottomWidth: 1,
-                    padding: 40,
-                }}
-            />
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Ionicons name="md-menu" size={32} color="black" />
-            </TouchableOpacity>
             <Text style={styles.title}>Sort by:</Text>
             <View style={styles.sortBar}>
                 <TouchableOpacity style={styles.button} onPress={sortByName}>
@@ -134,7 +126,7 @@ export default function VehicleListScreen({ navigation }) {
     );
 }
 
-//---------------styles-------------------
+//#region---------------styles-------------------
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -166,3 +158,4 @@ const styles = StyleSheet.create({
         backgroundColor: "peru",
     },
 });
+//#endregion
