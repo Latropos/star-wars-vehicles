@@ -1,43 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
-    OpaqueColorValue,
+    Animated,
     StyleSheet,
     Text,
     View,
 } from "react-native";
 import { Vehicle } from "../../types";
 import fetchAPI from "../../fetchApi";
-
-interface DetailsItemProps {
-    name: string;
-    value: string;
-}
-
-const DetailsItem = ({ name, value }: DetailsItemProps) => (
-    <View style={styles.detailsItem}>
-        <Text style={styles.listItem}>
-            {name}: {value}
-        </Text>
-    </View>
-);
-
-const Mendelejew = ({ name, value }: DetailsItemProps) => (
-    <View style={styles.box}>
-        {value == "unknown" ? (
-            <Text style={{ fontSize: 40 }}>?</Text>
-        ) : (
-            <View>
-                {value.length > 4 ? (
-                    <Text style={{ fontSize: 28 }}>{value}</Text>
-                ) : (
-                    <Text style={{ fontSize: 40 }}>{value}</Text>
-                )}
-            </View>
-        )}
-        <Text style={styles.boxLabel}>{name}</Text>
-    </View>
-);
+import MendelejewBox from "./MendelejewBox";
+import DetailsItem from "./DetailsItem";
 
 export default function VehicleDetailsScreen({ route }) {
     const [isLoading, setLoading] = useState(true);
@@ -78,15 +50,16 @@ export default function VehicleDetailsScreen({ route }) {
                     </View>
 
                     <View style={styles.MendelejewRow}>
-                        <Mendelejew
+                        <MendelejewBox
                             name="Cost in credits"
                             value={vehicle.cost_in_credits}
                         />
-                        <Mendelejew
+
+                        <MendelejewBox
                             name="Max atm speed"
                             value={vehicle.max_atmosphering_speed}
                         />
-                        <Mendelejew
+                        <MendelejewBox
                             name="Passengers"
                             value={vehicle.passengers}
                         />
@@ -111,9 +84,6 @@ const styles = StyleSheet.create({
         height: 1,
         width: "80%",
     },
-    listItem: {
-        fontSize: 20,
-    },
     optionContainer: {
         height: 250,
         justifyContent: "space-around",
@@ -123,14 +93,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-evenly",
         flexWrap: "wrap",
-    },
-    detailsItem: {
-        padding: 10,
-        borderRadius: 5,
-        margin: 25,
-        backgroundColor: "papayawhip",
-        borderColor: "coral",
-        borderWidth: 2,
     },
     box: {
         width: 100,
