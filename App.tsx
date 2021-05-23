@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Button, StyleSheet } from "react-native";
 import { NavigationContainer, DrawerActions } from "@react-navigation/native";
 import {
     createDrawerNavigator,
@@ -9,9 +9,8 @@ import {
 } from "@react-navigation/drawer";
 import useCachedResources from "./hooks/useCachedResources";
 
-import VehicleListScreen from "./screens/VehicleListScreen";
-import VehicleDetailsScreen from "./screens/VehicleDetailsScreen";
-import MovieListScreen from "./screens/MovieListScreen";
+import VehicleStack from "./screens/VehicleStack/VehicleStack";
+import MovieStack from "./screens/MovieStack/MovieStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -48,15 +47,9 @@ export default function App() {
                     drawerStyle={styles.drawer}
                     drawerContent={CustomDrawerContent}
                 >
-                    <Drawer.Screen
-                        name="Vehicles"
-                        component={VehicleListScreen}
-                    />
-                    <Drawer.Screen
-                        name="VehicleDetails"
-                        component={VehicleDetailsScreen}
-                    />
-                    <Drawer.Screen name="Movies" component={MovieListScreen} />
+                    <Drawer.Screen name="Vehicles" component={VehicleStack} />
+
+                    <Drawer.Screen name="Movies" component={MovieStack} />
                 </Drawer.Navigator>
             </NavigationContainer>
         );

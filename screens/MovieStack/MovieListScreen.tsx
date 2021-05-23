@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { ActivityIndicator, FlatList } from "react-native";
 import { Text, View } from "react-native";
-import fetchAPI from "../fetchApi";
-import { Movie } from "../types";
+import fetchAPI from "../../fetchApi";
+import { Movie } from "../../types";
 import Accordion from "react-native-collapsible/Accordion";
 import { Ionicons } from "@expo/vector-icons";
 
-//---------------------------------------------------------
+//#region -------------------------------------------------
 export default function MovieListScreen({ navigation }) {
     const [movies, setMovies] = useState<Array<Movie>>([]);
     const [state, setState] = useState<Array<number>>([]);
@@ -22,10 +22,6 @@ export default function MovieListScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Ionicons name="md-menu" size={32} color="black" />
-            </TouchableOpacity>
-            <Text style={styles.title}>Movies</Text>
             {!movies ? (
                 <ActivityIndicator />
             ) : (
@@ -48,8 +44,9 @@ export default function MovieListScreen({ navigation }) {
         </View>
     );
 }
+//#endregion
 
-//---------------styles-------------------
+//region---------------styles-------------------
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -75,3 +72,4 @@ const styles = StyleSheet.create({
         padding: 5,
     },
 });
+//endregion
