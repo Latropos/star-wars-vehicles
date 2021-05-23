@@ -17,14 +17,20 @@ const DetailsItem = ({ name, value }: DetailsItemProps) => (
 export default function VehicleDetailsScreen({ route }) {
     const [isLoading, setLoading] = useState(true);
     const [vehicle, setVehicle] = useState<Vehicle | undefined>();
+    const [errorMessage, setErrorMessage] = useState<string>(undefined);
 
     useEffect(() => {
         async function loadVehicle() {
-            let id: number = route.params.id;
+            setErrorMessage(undefined);
+            try {
+                let id: number = route.params.id;
 
-            const json = await fetchAPI.getVehicle(id);
-            setVehicle(json);
-            setLoading(false);
+                const json = await fetchAPI.getVehicle(id);
+                setVehicle(json);
+                setLoading(false);
+            } catch (err) {
+                setErrorMessage("Sorry, we can't fetch your API");
+            }
         }
         loadVehicle();
     }, []);
@@ -32,6 +38,7 @@ export default function VehicleDetailsScreen({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.separator} />
+            {errorMessage ? <Text> {errorMessage}</Text> : <Text></Text>}
 
             {isLoading ? (
                 <ActivityIndicator />

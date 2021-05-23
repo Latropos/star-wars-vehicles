@@ -11,17 +11,25 @@ import { Ionicons } from "@expo/vector-icons";
 export default function MovieListScreen({ navigation }) {
     const [movies, setMovies] = useState<Array<Movie>>([]);
     const [state, setState] = useState<Array<number>>([]);
+    const [errorMessage, setErrorMessage] = useState<string>(undefined);
 
     useEffect(() => {
         async function loadMovies() {
-            const json = await fetchAPI.getMovies();
-            setMovies(json);
+            setErrorMessage(undefined);
+            try {
+                const json = await fetchAPI.getMovies();
+                setMovies(json);
+            } catch (err) {
+                setErrorMessage("Sorry, we can't fetch your API");
+            }
         }
         loadMovies();
     }, []);
 
     return (
         <View style={styles.container}>
+            {errorMessage ? <Text> {errorMessage}</Text> : <Text></Text>}
+
             {!movies ? (
                 <ActivityIndicator />
             ) : (
