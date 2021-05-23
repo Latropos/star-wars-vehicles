@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import VehicleListScreen from "./VehicleListScreen";
 import VehicleDetailsScreen from "./VehicleDetailsScreen";
-
-import { Ionicons } from "@expo/vector-icons";
+import MenuButton from "../../components/MenuButton";
 const Stack = createStackNavigator();
 
 //---------------------------------
@@ -14,15 +12,17 @@ export default function VehicleStack({ navigation }) {
         <Stack.Navigator
             initialRouteName="VehicleList"
             screenOptions={{
-                headerTitle: () => <Text>Vehicles</Text>,
-                headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <Ionicons name="md-menu" size={32} color="black" />
-                    </TouchableOpacity>
-                ),
+                cardStyle: { backgroundColor: "#03062b" },
             }}
         >
-            <Stack.Screen name="VehicleList" component={VehicleListScreen} />
+            <Stack.Screen
+                name="VehicleList"
+                component={VehicleListScreen}
+                options={{
+                    headerTitle: () => <Text>Movies</Text>,
+                    headerLeft: () => <MenuButton navigation={navigation} />,
+                }}
+            />
             <Stack.Screen
                 name="VehicleDetails"
                 component={VehicleDetailsScreen}

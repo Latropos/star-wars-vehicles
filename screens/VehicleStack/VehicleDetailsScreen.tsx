@@ -7,7 +7,7 @@ import {
     View,
 } from "react-native";
 import { Vehicle } from "../../types";
-import fetchAPI from "../../fetchApi";
+import fetchAPI from "../../utils/fetchApi";
 
 interface DetailsItemProps {
     name: string;

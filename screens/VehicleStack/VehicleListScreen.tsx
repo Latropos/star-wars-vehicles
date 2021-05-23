@@ -7,8 +7,8 @@ import {
     Text,
     View,
 } from "react-native";
-import fetchAPI from "../../fetchApi";
-import service from "../../service";
+import fetchAPI from "../../utils/fetchApi";
+import service from "../../utils/service";
 import { Vehicle, VehicleList } from "../../types";
 
 interface ItemProps {
@@ -60,7 +60,7 @@ export default function VehicleListScreen({ navigation }) {
                 onPress={() =>
                     navigation.navigate("VehicleDetails", {
                         screen: "VehicleDetails",
-                        id: service.getId({ item }),
+                        id: service.getId(item.url),
                     })
                 }
             />
@@ -99,21 +99,21 @@ export default function VehicleListScreen({ navigation }) {
     //#endregion
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Sort by:</Text>
-            <View style={styles.sortBar}>
-                <TouchableOpacity style={styles.button} onPress={sortByName}>
-                    <Text style={styles.title}>Name</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={sortByLength}>
-                    <Text style={styles.title}>Length</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={sortByCrew}>
-                    <Text style={styles.title}>Crew</Text>
-                </TouchableOpacity>
-            </View>
-            {errorMessage ? <Text> {errorMessage}</Text> : <Text></Text>}
-            <View style={{ flex: 1, padding: 24 }}>
-                <Text style={styles.count}>Total: {count}</Text>
+            {!!errorMessage ? <Text> {errorMessage}</Text> : <View></View>}
+
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        padding: 24,
+                        transform: [
+                            { rotateX: "45deg" },
+                            { scaleY: 1.2 },
+                            { perspective: 1500 },
+                        ],
+                    },
+                ]}
+            >
                 {!data ? (
                     <ActivityIndicator />
                 ) : (
@@ -121,6 +121,34 @@ export default function VehicleListScreen({ navigation }) {
                         onEndReached={onEndReached}
                         onEndReachedThreshold={0.5}
                         data={data}
+                        ListHeaderComponent={() => (
+                            <View>
+                                <Text style={styles.sortBy}>Sort by:</Text>
+                                <View style={styles.sortBar}>
+                                    <TouchableOpacity
+                                        style={styles.button}
+                                        onPress={sortByName}
+                                    >
+                                        <Text style={styles.title}>Name</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.button}
+                                        onPress={sortByLength}
+                                    >
+                                        <Text style={styles.title}>Length</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.button}
+                                        onPress={sortByCrew}
+                                    >
+                                        <Text style={styles.title}>Crew</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        )}
+                        ListFooterComponent={() => (
+                            <Text style={styles.count}>Total: {count}</Text>
+                        )}
                         keyExtractor={(item, index) =>
                             item === undefined ? 1 : item.url
                         }
@@ -139,27 +167,35 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
+    sortBy: {
+        marginHorizontal: 16,
+        color: "lightgray",
+    },
     sortBar: {
         flexDirection: "row",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        marginHorizontal: 16,
+        marginBottom: 16,
     },
     button: {
         backgroundColor: "cornflowerblue",
         padding: 10,
         borderRadius: 5,
-        margin: 5,
     },
     title: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: "bold",
+        color: "#03062b",
     },
     count: {
-        fontSize: 20,
-        fontWeight: "bold",
+        marginHorizontal: 16,
+        color: "lightgray",
     },
     item: {
         padding: 10,
         borderRadius: 5,
-        marginVertical: 8,
+        marginVertical: 5,
         marginHorizontal: 16,
         backgroundColor: "peru",
     },
