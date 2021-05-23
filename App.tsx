@@ -11,10 +11,11 @@ import useCachedResources from "./hooks/useCachedResources";
 
 import VehicleStack from "./screens/VehicleStack/VehicleStack";
 import MovieStack from "./screens/MovieStack/MovieStack";
+import AnimationStack from "./screens/AnimationStack/AnimationStack";
 
 const Drawer = createDrawerNavigator();
 
-function CustomDrawerContent({ navigation }) {
+function CustomDrawerContent({ navigation }: any) {
     return (
         <DrawerContentScrollView>
             <DrawerItem
@@ -25,6 +26,11 @@ function CustomDrawerContent({ navigation }) {
             <DrawerItem
                 label="Movies"
                 onPress={() => navigation.navigate("Movies")}
+                labelStyle={styles.drawerLabel}
+            />
+            <DrawerItem
+                label="Animations"
+                onPress={() => navigation.navigate("Animations")}
                 labelStyle={styles.drawerLabel}
             />
         </DrawerContentScrollView>
@@ -50,6 +56,11 @@ export default function App() {
                     <Drawer.Screen name="Vehicles" component={VehicleStack} />
 
                     <Drawer.Screen name="Movies" component={MovieStack} />
+
+                    <Drawer.Screen
+                        name="Animations"
+                        component={AnimationStack}
+                    />
                 </Drawer.Navigator>
             </NavigationContainer>
         );

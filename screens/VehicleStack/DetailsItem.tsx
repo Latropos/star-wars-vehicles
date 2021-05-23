@@ -6,10 +6,6 @@ import {
     Text,
     View,
 } from "react-native";
-import { Vehicle } from "../../types";
-import fetchAPI from "../../utils/fetchApi";
-import MendelejewBox from "./MendelejewBox";
-
 interface DetailsItemProps {
     name: string;
     value: string;

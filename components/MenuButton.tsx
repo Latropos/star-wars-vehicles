@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
-
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function MenuButton({ navigation }) {
+export default function MenuButton({ navigation }: any) {
     return (
         <TouchableOpacity
             style={styles.menuButtonn}
-            onPress={() => navigation.openDrawer()}
+            onPress={() => {
+                navigation.openDrawer();
+            }}
         >
             <Ionicons name="md-menu" size={32} color="black" />
         </TouchableOpacity>
@@ -16,8 +17,8 @@ export default function MenuButton({ navigation }) {
 
 const styles = StyleSheet.create({
     menuButtonn: {
-        backgroundColor: "lightgray",
-        padding: 5,
+        backgroundColor: "gainsboro",
+        padding: 0,
         margin: 5,
     },
 });

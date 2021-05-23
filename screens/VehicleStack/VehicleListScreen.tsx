@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import fetchAPI from "../../utils/fetchApi";
 import service from "../../utils/service";
+import { Props } from "./VehicleStack";
 import { Vehicle, VehicleList } from "../../types";
 
 interface ItemProps {
@@ -26,15 +27,15 @@ const Item = ({ item, onPress }: ItemProps) =>
     );
 
 //#region -------------------------------------------------
-export default function VehicleListScreen({ navigation }) {
+export default function VehicleListScreen({ route, navigation }: Props) {
     const [data, setData] = useState<VehicleList>([]);
     const [count, setCount] = useState(0);
     const [page, setPage] = useState(1);
-    const [errorMessage, setErrorMessage] = useState<string>(undefined);
+    const [errorMessage, setErrorMessage] = useState<string>("");
     const [nextPageExists, setNextPageExists] = useState(true);
 
     async function loadThisPage() {
-        setErrorMessage(undefined);
+        setErrorMessage("");
         try {
             const [results, num_of_results, next_page_existst] =
                 await fetchAPI.getVehiclesListAndCount(page);
@@ -53,13 +54,12 @@ export default function VehicleListScreen({ navigation }) {
         loadThisPage();
     }, []);
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item }: any) => {
         return (
             <Item
                 item={item}
                 onPress={() =>
                     navigation.navigate("VehicleDetails", {
-                        screen: "VehicleDetails",
                         id: service.getId(item.url),
                     })
                 }
@@ -98,22 +98,21 @@ export default function VehicleListScreen({ navigation }) {
 
     //#endregion
     return (
-        <View style={styles.container}>
+        <View
+            style={[
+                { padding: 25 },
+                {
+                    transform: [
+                        { rotateX: "45deg" },
+                        { scaleY: 1.2 },
+                        { perspective: 1500 },
+                    ],
+                },
+            ]}
+        >
             {!!errorMessage ? <Text> {errorMessage}</Text> : <View></View>}
 
-            <View
-                style={[
-                    {
-                        flex: 1,
-                        padding: 24,
-                        transform: [
-                            { rotateX: "45deg" },
-                            { scaleY: 1.2 },
-                            { perspective: 1500 },
-                        ],
-                    },
-                ]}
-            >
+            <View>
                 {!data ? (
                     <ActivityIndicator />
                 ) : (
@@ -150,7 +149,7 @@ export default function VehicleListScreen({ navigation }) {
                             <Text style={styles.count}>Total: {count}</Text>
                         )}
                         keyExtractor={(item, index) =>
-                            item === undefined ? 1 : item.url
+                            item === undefined ? "1" : item.url
                         }
                         renderItem={renderItem}
                     />
