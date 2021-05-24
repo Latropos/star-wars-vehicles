@@ -4,22 +4,31 @@ import { createStackNavigator } from "@react-navigation/stack";
 import VehicleListScreen from "./VehicleListScreen";
 import VehicleDetailsScreen from "./VehicleDetailsScreen";
 import MenuButton from "../../components/MenuButton";
-const Stack = createStackNavigator();
+import colors from "../../constants/Colors";
+import { StackScreenProps } from "@react-navigation/stack";
 
-//---------------------------------
-export default function VehicleStack({ navigation }) {
+type VehicleStackParamList = {
+    VehicleList: undefined;
+    VehicleDetails: { id: string };
+};
+
+export type Props = StackScreenProps<VehicleStackParamList>;
+
+const Stack = createStackNavigator<VehicleStackParamList>();
+//#region main
+export default function VehicleStack({ navigation }: any) {
     return (
         <Stack.Navigator
             initialRouteName="VehicleList"
             screenOptions={{
-                cardStyle: { backgroundColor: "#03062b" },
+                cardStyle: { backgroundColor: colors.backgroundColor },
             }}
         >
             <Stack.Screen
                 name="VehicleList"
                 component={VehicleListScreen}
                 options={{
-                    headerTitle: () => <Text>Movies</Text>,
+                    headerTitle: () => <Text>Vehicles</Text>,
                     headerLeft: () => <MenuButton navigation={navigation} />,
                 }}
             />
@@ -30,3 +39,4 @@ export default function VehicleStack({ navigation }) {
         </Stack.Navigator>
     );
 }
+//#endregion

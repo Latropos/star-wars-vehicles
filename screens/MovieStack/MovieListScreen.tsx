@@ -1,21 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet, Touchable } from "react-native";
 import { ActivityIndicator, FlatList } from "react-native";
 import { Text, View } from "react-native";
 import fetchAPI from "../../utils/fetchApi";
-import { Movie } from "../../types";
+import { Movie } from "../../utils/types";
 import Accordion from "react-native-collapsible/Accordion";
 import { Ionicons } from "@expo/vector-icons";
 
-//#region -------------------------------------------------
-export default function MovieListScreen({ navigation }) {
+//#region detailItem
+interface DetailsItemProps {
+    name: string;
+    value: string;
+}
+
+const DetailsItem = ({ name, value }: DetailsItemProps) => {
+    return (
+        <Text style={styles.content}>
+            {name}: {value}
+        </Text>
+    );
+};
+
+////#endregion
+
+//#region MovieListScreen
+export default function MovieListScreen({ navigation }: any) {
     const [movies, setMovies] = useState<Array<Movie>>([]);
     const [state, setState] = useState<Array<number>>([]);
-    const [errorMessage, setErrorMessage] = useState<string>(undefined);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     useEffect(() => {
         async function loadMovies() {
-            setErrorMessage(undefined);
+            setErrorMessage("");
             try {
                 const json = await fetchAPI.getMovies();
                 setMovies(json);
@@ -26,6 +42,26 @@ export default function MovieListScreen({ navigation }) {
         loadMovies();
     }, []);
 
+    const MovieDescription = ({ movie }: any) => {
+        return (
+            <View style={styles.contentContainer}>
+                <DetailsItem name="Director" value={movie.director} />
+                <DetailsItem name="Producer" value={movie.producer} />
+                <DetailsItem name="Release date" value={movie.release_date} />
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() =>
+                        navigation.navigate("Animation", {
+                            opening_crawl: movie.opening_crawl,
+                        })
+                    }
+                >
+                    <Text>Watch intro</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
     return (
         <View style={styles.container}>
             {errorMessage ? <Text> {errorMessage}</Text> : <Text></Text>}
@@ -40,12 +76,8 @@ export default function MovieListScreen({ navigation }) {
                     renderHeader={(movie) => (
                         <Text style={styles.header}>{movie.title}</Text>
                     )}
-                    renderContent={(movie) => (
-                        <View style={styles.contentContainer}>
-                            <Text style={styles.content}>
-                                {movie.opening_crawl}
-                            </Text>
-                        </View>
+                    renderContent={(movie: Movie) => (
+                        <MovieDescription movie={movie} />
                     )}
                     onChange={(activeSections) => {
                         setState(activeSections);
@@ -57,7 +89,7 @@ export default function MovieListScreen({ navigation }) {
 }
 //#endregion
 
-//region---------------styles-------------------
+//#region styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -88,7 +120,12 @@ const styles = StyleSheet.create({
         marginHorizontal: "7%",
         width: "86%",
     },
+    button: {
+        backgroundColor: "wheat",
+        padding: 10,
+        borderRadius: 5,
+    },
 
     contentContainer: {},
 });
-//endregion
+//#endregion
