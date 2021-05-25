@@ -64,7 +64,7 @@ export default function MovieListScreen({ navigation }: any) {
     };
     return (
         <View style={styles.container}>
-            {errorMessage ? <Text> {errorMessage}</Text> : <Text></Text>}
+            {!!errorMessage && <Text> {errorMessage}</Text>}
 
             {!movies ? (
                 <ActivityIndicator />

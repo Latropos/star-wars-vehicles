@@ -110,7 +110,7 @@ export default function VehicleListScreen({ route, navigation }: Props) {
                 },
             ]}
         >
-            {!!errorMessage ? <Text> {errorMessage}</Text> : <View></View>}
+            {!!errorMessage && <Text> {errorMessage}</Text>}
 
             <View>
                 {!data ? (
