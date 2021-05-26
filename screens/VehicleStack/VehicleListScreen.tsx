@@ -37,12 +37,12 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     async function loadThisPage() {
         setErrorMessage("");
         try {
-            const [results, num_of_results, next_page_existst] =
+            const { results, numberOfVehicles, hasNextPage } =
                 await fetchAPI.getVehiclesListAndCount(page);
 
             setData(data.concat(results));
-            setCount(num_of_results);
-            setNextPageExists(next_page_existst);
+            setCount(numberOfVehicles);
+            setNextPageExists(hasNextPage);
 
             setPage(page + 1);
         } catch (err) {
