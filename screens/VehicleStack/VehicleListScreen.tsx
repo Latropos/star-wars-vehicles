@@ -10,7 +10,7 @@ import {
 import fetchAPI from "../../utils/fetchApi";
 import service from "../../utils/service";
 import { Props } from "./VehicleStack";
-import { Vehicle, VehicleList } from "../../types";
+import { Vehicle, VehicleList } from "../../utils/types";
 
 interface ItemProps {
     item: Vehicle;
@@ -58,11 +58,13 @@ export default function VehicleListScreen({ route, navigation }: Props) {
         return (
             <Item
                 item={item}
-                onPress={() =>
-                    navigation.navigate("VehicleDetails", {
-                        id: service.getId(item.url),
-                    })
-                }
+                onPress={() => {
+                    const vehicleId = service.getId(item.url);
+                    if (vehicleId !== undefined)
+                        navigation.navigate("VehicleDetails", {
+                            id: vehicleId,
+                        });
+                }}
             />
         );
     };
