@@ -58,4 +58,10 @@ export const useGetVehicle = (id: number): [string, Vehicle | undefined] => {
     return [errorMessage, vehicle];
 };
 
-export default fetchAPI;
+//------------------Movies------------------------
+export async function getMovies(): Promise<[Movie]> {
+    const url = `https://swapi.dev/api/films/`;
+    const response = await fetch(url);
+    const json = await response.json();
+    return json.results;
+}

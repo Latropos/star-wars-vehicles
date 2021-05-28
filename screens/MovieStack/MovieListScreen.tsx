@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, StyleSheet, Touchable } from "react-native";
 import { ActivityIndicator, FlatList } from "react-native";
 import { Text, View } from "react-native";
-import fetchAPI from "../../utils/fetchApi";
+import { getMovies } from "../../utils/fetchApi";
 import { Movie } from "../../utils/types";
 import Accordion from "react-native-collapsible/Accordion";
 import { Ionicons } from "@expo/vector-icons";
@@ -33,7 +33,7 @@ export default function MovieListScreen({ navigation }: any) {
         async function loadMovies() {
             setErrorMessage("");
             try {
-                const json = await fetchAPI.getMovies();
+                const json = await getMovies();
                 setMovies(json);
             } catch (err) {
                 setErrorMessage("Sorry, we can't fetch your API");

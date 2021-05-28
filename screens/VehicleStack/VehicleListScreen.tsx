@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -10,18 +10,28 @@ import {
 import { getVehiclesListAndCount } from "../../utils/fetchApi";
 import service from "../../utils/service";
 import { Props } from "./VehicleStack";
-import { Vehicle, VehicleList } from "../../types";
+import { Vehicle, VehicleList } from "../../utils/types";
+import { AppStateContext } from "../../utils/cache";
 
 interface ItemProps {
     item: Vehicle;
     onPress: () => void;
+    color: string;
 }
 
-const Item = ({ item, onPress }: ItemProps) =>
+const Item = ({ item, onPress, color }: ItemProps) =>
     item === undefined ? (
         <Text></Text>
     ) : (
-        <TouchableOpacity onPress={onPress} style={[styles.item]}>
+        <TouchableOpacity
+            onPress={onPress}
+            style={[
+                styles.item,
+                {
+                    backgroundColor: color,
+                },
+            ]}
+        >
             <Text style={[styles.title]}>{item.name}</Text>
         </TouchableOpacity>
     );
@@ -33,11 +43,12 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     const [page, setPage] = useState(1);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [nextPageExists, setNextPageExists] = useState(true);
+    const context = useContext(AppStateContext);
 
     async function loadThisPage() {
         setErrorMessage("");
         try {
-            const [results, num_of_results, next_page_existst] =
+            const { results, numberOfVehicles, hasNextPage } =
                 await getVehiclesListAndCount(page);
 
             setData(data.concat(results));
@@ -51,6 +62,7 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     }
 
     useEffect(() => {
+        console.log({ context });
         loadThisPage();
     }, []);
 
@@ -199,7 +211,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginVertical: 5,
         marginHorizontal: 16,
-        backgroundColor: "peru",
     },
 });
 //#endregion
