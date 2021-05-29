@@ -7,7 +7,7 @@ import {
     Text,
     View,
 } from "react-native";
-import fetchAPI from "../../utils/fetchApi";
+import { getVehiclesListAndCount } from "../../utils/fetchApi";
 import service from "../../utils/service";
 import { Props } from "./VehicleStack";
 import { Vehicle, VehicleList } from "../../types";
@@ -38,7 +38,7 @@ export default function VehicleListScreen({ route, navigation }: Props) {
         setErrorMessage("");
         try {
             const [results, num_of_results, next_page_existst] =
-                await fetchAPI.getVehiclesListAndCount(page);
+                await getVehiclesListAndCount(page);
 
             setData(data.concat(results));
             setCount(num_of_results);
@@ -58,11 +58,14 @@ export default function VehicleListScreen({ route, navigation }: Props) {
         return (
             <Item
                 item={item}
-                onPress={() =>
-                    navigation.navigate("VehicleDetails", {
-                        id: service.getId(item.url),
-                    })
-                }
+                onPress={() => {
+                    const vehicleId = service.getId(item.url);
+                    if (vehicleId !== undefined)
+                        navigation.navigate("VehicleDetails", {
+                            id: vehicleId,
+                        });
+                }}
+                color="peru"
             />
         );
     };
