@@ -43,7 +43,6 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     const [page, setPage] = useState(1);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [nextPageExists, setNextPageExists] = useState(true);
-    const context = useContext(AppStateContext);
 
     async function loadThisPage() {
         setErrorMessage("");
@@ -62,7 +61,6 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     }
 
     useEffect(() => {
-        console.log({ context });
         loadThisPage();
     }, []);
 
@@ -77,7 +75,7 @@ export default function VehicleListScreen({ route, navigation }: Props) {
                             id: vehicleId,
                         });
                 }}
-                color={context.color}
+                color="peru"
             />
         );
     };
