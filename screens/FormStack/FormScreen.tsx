@@ -7,10 +7,18 @@ export default function FormScreen() {
     const [character, setCharacter] = useState("");
     const [planet, setPlanet] = useState("");
     const [movie, setMovie] = useState("");
+    const [validForm, setValidForm] = useState(false);
 
     const planetInput = React.createRef();
     const movieInput = React.createRef();
 
+    function validateForm() {
+        const formIsValid =
+            (character != "" && planet != "") ||
+            (character != "" && movie != "") ||
+            (planet != "" && movie != "");
+        setValidForm(formIsValid);
+    }
     function focusNext(nextInput) {
         nextInput.current.focus();
     }
@@ -24,7 +32,10 @@ export default function FormScreen() {
                     returnKeyType="next"
                     autoCapitalize="words"
                     onSubmitEditing={() => focusNext(planetInput)}
-                    onChangeText={(text) => setCharacter(text)}
+                    onChangeText={(text) => {
+                        setCharacter(text);
+                        validateForm();
+                    }}
                 />
                 <TextInput
                     style={styles.formField}
@@ -33,7 +44,10 @@ export default function FormScreen() {
                     placeholder="Favourite planet"
                     returnKeyType="next"
                     onSubmitEditing={() => focusNext(movieInput)}
-                    onChangeText={(text) => setPlanet(text)}
+                    onChangeText={(text) => {
+                        setPlanet(text);
+                        validateForm();
+                    }}
                 />
                 <TextInput
                     style={styles.formField}
@@ -41,11 +55,15 @@ export default function FormScreen() {
                     autoFocus={true}
                     placeholder="Favourite movie"
                     returnKeyType="done"
-                    onChangeText={(text) => setMovie(text)}
+                    onChangeText={(text) => {
+                        setMovie(text);
+                        validateForm();
+                    }}
                 />
             </View>
             <View style={{ flex: 1, justifyContent: "flex-end" }}>
                 <TouchableOpacity
+                    disabled={!validForm}
                     style={styles.button}
                     onPress={() =>
                         alert(character + "\n" + planet + "\n" + movie)
