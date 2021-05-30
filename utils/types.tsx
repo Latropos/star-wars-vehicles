@@ -20,4 +20,5 @@ export interface Movie {
 export interface Movie {
     title: string;
     opening_crawl: string;
+    director: string;
 }

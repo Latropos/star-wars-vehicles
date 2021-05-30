@@ -1,27 +1,30 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import MovieListScreen from "./MovieListScreen";
-
-import { Ionicons } from "@expo/vector-icons";
+import MenuButton from "../../components/MenuButton";
+import colors from "../../constants/Colors";
+import OpeningCrawl from "./OpeningCrawlScreen";
 const Stack = createStackNavigator();
 
 //---------------------------------
-export default function VehicleStack({ navigation }) {
+export default function VehicleStack({ navigation }: any) {
     return (
         <Stack.Navigator
             initialRouteName="MovieStack"
             screenOptions={{
-                headerTitle: () => <Text>Movies</Text>,
-                headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <Ionicons name="md-menu" size={32} color="black" />
-                    </TouchableOpacity>
-                ),
+                cardStyle: { backgroundColor: colors.backgroundColor },
             }}
         >
-            <Stack.Screen name="MovieListScreen" component={MovieListScreen} />
+            <Stack.Screen
+                name="MovieListScreen"
+                component={MovieListScreen}
+                options={{
+                    headerTitle: () => <Text>Movies</Text>,
+                    headerLeft: () => <MenuButton navigation={navigation} />,
+                }}
+            />
+            <Stack.Screen name="Animation" component={OpeningCrawl} />
         </Stack.Navigator>
     );
 }

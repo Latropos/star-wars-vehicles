@@ -1,28 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import VehicleListScreen from "./VehicleListScreen";
 import VehicleDetailsScreen from "./VehicleDetailsScreen";
+import MenuButton from "../../components/MenuButton";
+import colors from "../../constants/Colors";
+import { StackScreenProps } from "@react-navigation/stack";
 
-import { Ionicons } from "@expo/vector-icons";
-const Stack = createStackNavigator();
+type VehicleStackParamList = {
+    VehicleList: undefined;
+    VehicleDetails: { id: string };
+};
 
-//---------------------------------
-export default function VehicleStack({ navigation }) {
+export type Props = StackScreenProps<VehicleStackParamList>;
+
+const Stack = createStackNavigator<VehicleStackParamList>();
+//#region main
+export default function VehicleStack({ navigation }: any) {
     return (
         <Stack.Navigator
             initialRouteName="VehicleList"
             screenOptions={{
-                headerTitle: () => <Text>Vehicles</Text>,
-                headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <Ionicons name="md-menu" size={32} color="black" />
-                    </TouchableOpacity>
-                ),
+                cardStyle: { backgroundColor: colors.backgroundColor },
             }}
         >
-            <Stack.Screen name="VehicleList" component={VehicleListScreen} />
+            <Stack.Screen
+                name="VehicleList"
+                component={VehicleListScreen}
+                options={{
+                    headerTitle: () => <Text>Vehicles</Text>,
+                    headerLeft: () => <MenuButton navigation={navigation} />,
+                }}
+            />
             <Stack.Screen
                 name="VehicleDetails"
                 component={VehicleDetailsScreen}
@@ -30,3 +39,4 @@ export default function VehicleStack({ navigation }) {
         </Stack.Navigator>
     );
 }
+//#endregion

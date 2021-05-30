@@ -1,5 +1,4 @@
-import NotFoundScreen from "./screens/NotFoundScreen";
-import { Vehicle, VehicleList } from "./types";
+import { Vehicle, VehicleList } from "../types";
 
 const fetchAPI = {
     //---------------Vehicles------------------

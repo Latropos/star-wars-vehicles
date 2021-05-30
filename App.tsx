@@ -14,7 +14,7 @@ import MovieStack from "./screens/MovieStack/MovieStack";
 
 const Drawer = createDrawerNavigator();
 
-function CustomDrawerContent({ navigation }) {
+function CustomDrawerContent({ navigation }: any) {
     return (
         <DrawerContentScrollView>
             <DrawerItem
