@@ -6,7 +6,7 @@ import {
     Text,
     View,
 } from "react-native";
-import { Vehicle } from "../../types";
+import { Vehicle } from "../../utils/types";
 import fetchAPI from "../../utils/fetchApi";
 import MendelejewBox from "./MendelejewBox";
 import { Props } from "./VehicleStack";

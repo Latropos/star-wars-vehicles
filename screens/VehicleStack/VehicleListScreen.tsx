@@ -10,7 +10,7 @@ import {
 import fetchAPI from "../../utils/fetchApi";
 import service from "../../utils/service";
 import { Props } from "./VehicleStack";
-import { Vehicle, VehicleList } from "../../types";
+import { Vehicle, VehicleList } from "../../utils/types";
 
 interface ItemProps {
     item: Vehicle;
@@ -37,12 +37,12 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     async function loadThisPage() {
         setErrorMessage("");
         try {
-            const [results, num_of_results, next_page_existst] =
+            const { results, numberOfVehicles, hasNextPage } =
                 await fetchAPI.getVehiclesListAndCount(page);
 
             setData(data.concat(results));
-            setCount(num_of_results);
-            setNextPageExists(next_page_existst);
+            setCount(numberOfVehicles);
+            setNextPageExists(hasNextPage);
 
             setPage(page + 1);
         } catch (err) {
@@ -58,11 +58,13 @@ export default function VehicleListScreen({ route, navigation }: Props) {
         return (
             <Item
                 item={item}
-                onPress={() =>
-                    navigation.navigate("VehicleDetails", {
-                        id: service.getId(item.url),
-                    })
-                }
+                onPress={() => {
+                    const vehicleId = service.getId(item.url);
+                    if (vehicleId !== undefined)
+                        navigation.navigate("VehicleDetails", {
+                            id: vehicleId,
+                        });
+                }}
             />
         );
     };
@@ -110,7 +112,7 @@ export default function VehicleListScreen({ route, navigation }: Props) {
                 },
             ]}
         >
-            {!!errorMessage ? <Text> {errorMessage}</Text> : <View></View>}
+            {!!errorMessage && <Text> {errorMessage}</Text>}
 
             <View>
                 {!data ? (
