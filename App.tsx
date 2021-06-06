@@ -12,6 +12,7 @@ import useCachedResources from "./hooks/useCachedResources";
 import VehicleStack from "./screens/VehicleStack/VehicleStack";
 import MovieStack from "./screens/MovieStack/MovieStack";
 
+import { AppStateProvider } from "./utils/cache";
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent({ navigation }: any) {
@@ -35,11 +36,10 @@ function CustomDrawerContent({ navigation }: any) {
 export default function App() {
     const [isOpen, setOpen] = useState(false);
     const isLoadingComplete = useCachedResources();
+    const ThemeContext = React.createContext("peru");
 
-    if (!isLoadingComplete) {
-        return null;
-    } else {
-        return (
+    return (
+        <AppStateProvider>
             <NavigationContainer>
                 <Drawer.Navigator
                     initialRouteName="Vehicles"
@@ -52,8 +52,8 @@ export default function App() {
                     <Drawer.Screen name="Movies" component={MovieStack} />
                 </Drawer.Navigator>
             </NavigationContainer>
-        );
-    }
+        </AppStateProvider>
+    );
 }
 
 //---------------styles-------------------

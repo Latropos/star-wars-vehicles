@@ -1,47 +1,17 @@
-import React, { useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    Animated,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
-import { Vehicle } from "../../utils/types";
-import fetchAPI from "../../utils/fetchApi";
+import React, { useEffect, useState, useContext, useReducer } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useGetVehicle } from "../../utils/fetchApi";
 import MendelejewBox from "./MendelejewBox";
-import { Props } from "./VehicleStack";
 import DetailsItem from "./DetailsItem";
-interface DetailsItemProps {
-    name: string;
-    value: string;
-}
 
 export default function VehicleDetailsScreen({ route }: any) {
-    const [isLoading, setLoading] = useState(true);
-    const [vehicle, setVehicle] = useState<Vehicle | undefined>();
-    const [errorMessage, setErrorMessage] = useState<string>("");
-
-    useEffect(() => {
-        async function loadVehicle() {
-            setErrorMessage("");
-            try {
-                let id: number = route.params.id;
-
-                const json = await fetchAPI.getVehicle(id);
-                setVehicle(json);
-                setLoading(false);
-            } catch (err) {
-                setErrorMessage("Sorry, we can't fetch your API");
-            }
-        }
-        loadVehicle();
-    }, []);
+    const [errorMessage, vehicle] = useGetVehicle(route.params.id);
 
     return (
         <View style={styles.container}>
             {errorMessage ? <Text> {errorMessage}</Text> : <View></View>}
 
-            {isLoading ? (
+            {vehicle === undefined ? (
                 <ActivityIndicator />
             ) : (
                 <View>
