@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, StyleSheet } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 import { NavigationContainer, DrawerActions } from "@react-navigation/native";
 import {
     createDrawerNavigator,
@@ -14,6 +14,9 @@ import MovieStack from "./screens/MovieStack/MovieStack";
 
 import { AppStateProvider } from "./utils/cache";
 import FormStack from "./screens/FormStack/FormStack";
+import OpenAppCounter from "./components/OpenAppCounter";
+import { STORAGE_KEY } from "./constants/AsyncStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Drawer = createDrawerNavigator();
 
@@ -36,15 +39,26 @@ function CustomDrawerContent({ navigation }: any) {
                 onPress={() => navigation.navigate("Form")}
                 labelStyle={styles.drawerLabel}
             />
+            <OpenAppCounter />
         </DrawerContentScrollView>
     );
 }
 
 //---------------------------------
 export default function App() {
-    const [isOpen, setOpen] = useState(false);
-    const isLoadingComplete = useCachedResources();
-    const ThemeContext = React.createContext("peru");
+    const incrementAppCounter = async () => {
+        try {
+            const value = await AsyncStorage.getItem(STORAGE_KEY);
+            if (value !== null) {
+                const new_val = parseInt(value) + 1 + "";
+                await AsyncStorage.setItem(STORAGE_KEY, new_val);
+            } else AsyncStorage.setItem(STORAGE_KEY, "1");
+        } catch (e) {}
+    };
+
+    useEffect(() => {
+        incrementAppCounter();
+    }, []);
 
     return (
         <AppStateProvider>
