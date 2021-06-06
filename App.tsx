@@ -13,6 +13,8 @@ import VehicleStack from "./screens/VehicleStack/VehicleStack";
 import MovieStack from "./screens/MovieStack/MovieStack";
 
 import { AppStateProvider } from "./utils/cache";
+import FormStack from "./screens/FormStack/FormStack";
+
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent({ navigation }: any) {
@@ -26,6 +28,12 @@ function CustomDrawerContent({ navigation }: any) {
             <DrawerItem
                 label="Movies"
                 onPress={() => navigation.navigate("Movies")}
+                labelStyle={styles.drawerLabel}
+            />
+
+            <DrawerItem
+                label="Form"
+                onPress={() => navigation.navigate("Form")}
                 labelStyle={styles.drawerLabel}
             />
         </DrawerContentScrollView>
@@ -42,7 +50,7 @@ export default function App() {
         <AppStateProvider>
             <NavigationContainer>
                 <Drawer.Navigator
-                    initialRouteName="Vehicles"
+                    initialRouteName="Form"
                     overlayColor="transparent"
                     drawerStyle={styles.drawer}
                     drawerContent={CustomDrawerContent}
@@ -50,6 +58,7 @@ export default function App() {
                     <Drawer.Screen name="Vehicles" component={VehicleStack} />
 
                     <Drawer.Screen name="Movies" component={MovieStack} />
+                    <Drawer.Screen name="Form" component={FormStack} />
                 </Drawer.Navigator>
             </NavigationContainer>
         </AppStateProvider>
