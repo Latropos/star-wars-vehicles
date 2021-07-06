@@ -1,16 +1,54 @@
-import React, { useState } from "react";
-import { Text, StyleSheet, View, TextInput, Button } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Text, StyleSheet, View, TextInput, Button, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function FormScreen() {
+const HideKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
+
+
+class FormScreen2 extends React.Component{
+    private characterInput = React.createRef();
+
+    componentDidMount(){
+
+    }
+
+    render(){
+        return null;
+    }
+}
+
+export default function FormScreen({navigation}) {
     const [character, setCharacter] = useState("");
     const [planet, setPlanet] = useState("");
     const [movie, setMovie] = useState("");
     const [validForm, setValidForm] = useState(false);
 
-    const planetInput = React.createRef();
-    const movieInput = React.createRef();
+    const characterInput = useRef<TextInput>(null);
+    const planetInput = useRef<TextInput>(null);
+    const movieInput = useRef<TextInput>(null);
+
+    useEffect (()=>{
+        const clearData = navigation.addListener('focus', () => {
+            // Screen was focused
+            // Do something
+                setCharacter("");
+                characterInput.current?.clear();
+                setPlanet("");
+                planetInput.current?.clear();
+                setMovie("");
+                movieInput.current?.clear();
+          });
+            return  clearData
+
+            
+        }, [navigation])
+    
 
     function validateForm() {
         const formIsValid =
@@ -19,14 +57,17 @@ export default function FormScreen() {
             (planet != "" && movie != "");
         setValidForm(formIsValid);
     }
-    function focusNext(nextInput) {
-        nextInput.current.focus();
+    function focusNext(nextInput: React.RefObject<TextInput>) {
+        nextInput.current?.focus();
     }
     return (
+        <HideKeyboard>
         <View style={styles.container}>
             <View style={{ flex: 1, justifyContent: "flex-start" }}>
-                <TextInput
+                <TextInput 
+                    clearButtonMode="always"
                     style={styles.formField}
+                    ref={characterInput}
                     autoFocus={true}
                     placeholder="Favourite character"
                     returnKeyType="next"
@@ -38,6 +79,7 @@ export default function FormScreen() {
                     }}
                 />
                 <TextInput
+                    clearButtonMode="always"
                     style={styles.formField}
                     ref={planetInput}
                     autoFocus={true}
@@ -50,6 +92,7 @@ export default function FormScreen() {
                     }}
                 />
                 <TextInput
+                    clearButtonMode="always"
                     style={styles.formField}
                     ref={movieInput}
                     autoFocus={true}
@@ -73,6 +116,7 @@ export default function FormScreen() {
                 </TouchableOpacity>
             </View>
         </View>
+        </HideKeyboard>
     );
 }
 
