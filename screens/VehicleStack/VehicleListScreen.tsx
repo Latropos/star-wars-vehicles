@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    TouchableOpacity,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { getVehiclesListAndCount } from "../../utils/fetchApi";
 import service from "../../utils/service";
@@ -14,29 +14,29 @@ import { Vehicle, VehicleList } from "../../utils/types";
 import { AppStateContext } from "../../utils/cache";
 
 interface ItemProps {
-    item: Vehicle;
-    onPress: () => void;
-    color: string;
+  item: Vehicle;
+  onPress: () => void;
+  color: string;
 }
 
 
 
 const Item = ({ item, onPress, color }: ItemProps) =>
-    item === undefined ? (
-        <Text></Text>
-    ) : (
-        <TouchableOpacity
-            onPress={onPress}
-            style={[
-                styles.item,
-                {
-                    backgroundColor: color,
-                },
-            ]}
-        >
-            <Text style={[styles.title]}>{item.name}</Text>
-        </TouchableOpacity>
-    );
+  item === undefined ? (
+    <Text></Text>
+  ) : (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        styles.item,
+        {
+          backgroundColor: color,
+        },
+      ]}
+    >
+      <Text style={[styles.title]}>{item.name}</Text>
+    </TouchableOpacity>
+  );
 
 //#region -------------------------------------------------
 export default function VehicleListScreen({ route, navigation }: Props) {
@@ -48,48 +48,48 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     const [currentSortingOption, setCurrentSortingOption] = useState<String>("")
     const [currentSortingDirection, setCurrentSortingDirection] = useState(1)
 
-    async function loadThisPage() {
-        setErrorMessage("");
-        try {
-            const { results, numberOfVehicles, hasNextPage } =
-                await getVehiclesListAndCount(page);
+  async function loadThisPage() {
+    setErrorMessage("");
+    try {
+      const { results, numberOfVehicles, hasNextPage } =
+        await getVehiclesListAndCount(page);
 
-            setData(data.concat(results));
-            setCount(numberOfVehicles);
-            setNextPageExists(hasNextPage);
+      setData(data.concat(results));
+      setCount(numberOfVehicles);
+      setNextPageExists(hasNextPage);
 
-            setPage(page + 1);
-        } catch (err) {
-            setErrorMessage("Sorry, we can't fetch your API");
-        }
+      setPage(page + 1);
+    } catch (err) {
+      setErrorMessage("Sorry, we can't fetch your API");
     }
+  }
 
-    useEffect(() => {
-        loadThisPage();
-    }, []);
+  useEffect(() => {
+    loadThisPage();
+  }, []);
 
-    const renderItem = ({ item }: any) => {
-        return (
-            <Item
-                item={item}
-                onPress={() => {
-                    const vehicleId = service.getId(item.url);
-                    if (vehicleId !== undefined)
-                        navigation.navigate("VehicleDetails", {
-                            id: vehicleId,
-                        });
-                }}
-                color="peru"
-            />
-        );
-    };
+  const renderItem = ({ item }: any) => {
+    return (
+      <Item
+        item={item}
+        onPress={() => {
+          const vehicleId = service.getId(item.url);
+          if (vehicleId !== undefined)
+            navigation.navigate("VehicleDetails", {
+              id: vehicleId,
+            });
+        }}
+        color="peru"
+      />
+    );
+  };
 
-    function onEndReached() {
-        if (nextPageExists) {
-            loadThisPage();
-        }
+  function onEndReached() {
+    if (nextPageExists) {
+      loadThisPage();
     }
-    //#endregion
+  }
+  //#endregion
 
     //#region ---------------sorting------------------
     function SortingOption ({onPress, name}) {
@@ -177,6 +177,44 @@ export default function VehicleListScreen({ route, navigation }: Props) {
 
 //#region---------------styles-------------------
 const styles = StyleSheet.create({
+<<<<<<< HEAD
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sortBy: {
+    marginHorizontal: 16,
+    color: "lightgray",
+  },
+  sortBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  button: {
+    backgroundColor: "cornflowerblue",
+    padding: 10,
+    borderRadius: 5,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#03062b",
+  },
+  count: {
+    marginHorizontal: 16,
+    color: "lightgray",
+  },
+  item: {
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+    marginHorizontal: 16,
+  },
+=======
     container: {
         flex: 1,
         alignItems: "center",
@@ -215,5 +253,6 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginHorizontal: 16,
     },
+>>>>>>> main
 });
 //#endregion
