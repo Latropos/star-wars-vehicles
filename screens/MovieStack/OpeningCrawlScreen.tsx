@@ -9,7 +9,7 @@ export default function Animation({ navigation, route }) {
         Animated.parallel([
             Animated.timing(_animationValue, {
                 toValue: 1,
-                duration: 30000,
+                duration: 10000,
                 useNativeDriver: true, //
             }),
         ]).start();
@@ -20,7 +20,7 @@ export default function Animation({ navigation, route }) {
             <View
                 style={{
                     transform: [
-                        { rotateX: "75deg" },
+                        { rotateX: "35deg" },
                         {
                             perspective: 150,
                         },

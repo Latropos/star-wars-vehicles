@@ -19,6 +19,8 @@ interface ItemProps {
     color: string;
 }
 
+
+
 const Item = ({ item, onPress, color }: ItemProps) =>
     item === undefined ? (
         <Text></Text>
@@ -43,6 +45,8 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     const [page, setPage] = useState(1);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [nextPageExists, setNextPageExists] = useState(true);
+    const [currentSortingOption, setCurrentSortingOption] = useState<String>("")
+    const [currentSortingDirection, setCurrentSortingDirection] = useState(1)
 
     async function loadThisPage() {
         setErrorMessage("");
@@ -88,6 +92,20 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     //#endregion
 
     //#region ---------------sorting------------------
+    function SortingOption ({onPress, name}) {
+        const color = name === currentSortingOption ? "powderblue" : "steelblue";
+        const arrow = name === currentSortingOption ? (currentSortingDirection === 1 ? "🔽" : "🔼") : "  ";
+
+        return (
+            <TouchableOpacity
+                style={[styles.button, {backgroundColor: color}]
+            }
+                onPress={onPress}>
+                    <Text style={styles.sortingOption}>{name}  {arrow}</Text>
+            </TouchableOpacity>
+        )
+    }
+
     function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
         return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
     }
@@ -99,31 +117,41 @@ export default function VehicleListScreen({ route, navigation }: Props) {
     }
 
     //buttons:
-    function sortByName() {
-        setData(sortVehicleListByName(data));
-    }
-    function sortByLength() {
-        setData(sortVehicleListByLength(data));
-    }
-    function sortByCrew() {
-        setData(sortVehicleListByCrew(data));
+    function sortBy(sortingOption : String, sortingFuntion){
+        setData(sortingFuntion(data));
+        if (currentSortingOption === sortingOption){
+            setData([...data].reverse())
+            setCurrentSortingDirection(currentSortingDirection*(-1))
+        }
+        else(
+            setCurrentSortingDirection(1)
+        )
+        setCurrentSortingOption(sortingOption);         
+
     }
 
     //#endregion
     return (
-        <View
-            style={[
-                { padding: 25 },
-                {
-                    transform: [
-                        { rotateX: "45deg" },
-                        { scaleY: 1.2 },
-                        { perspective: 1500 },
-                    ],
-                },
-            ]}
-        >
-            {!!errorMessage && <Text> {errorMessage}</Text>}
+        <View>
+            {!!errorMessage && <Text> {errorMessage}</Text>}                            
+            <View>
+                <Text style={styles.sortBy}>Sort by:</Text>
+                <View style={styles.sortBar}>
+                    <SortingOption
+                    onPress={() => sortBy("Name", sortVehicleListByName)}
+                    name="Name"
+                    />
+                    <SortingOption
+                    onPress={() => sortBy("Length", sortVehicleListByLength)}
+                    name="Length"
+                    />
+                    <SortingOption
+                    onPress={() => sortBy("Crew", sortVehicleListByCrew)}
+                    name="Crew"
+                    />
+
+                </View>
+            </View>
 
             <View>
                 {!data ? (
@@ -133,31 +161,6 @@ export default function VehicleListScreen({ route, navigation }: Props) {
                         onEndReached={onEndReached}
                         onEndReachedThreshold={0.5}
                         data={data}
-                        ListHeaderComponent={() => (
-                            <View>
-                                <Text style={styles.sortBy}>Sort by:</Text>
-                                <View style={styles.sortBar}>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={sortByName}
-                                    >
-                                        <Text style={styles.title}>Name</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={sortByLength}
-                                    >
-                                        <Text style={styles.title}>Length</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={sortByCrew}
-                                    >
-                                        <Text style={styles.title}>Crew</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        )}
                         ListFooterComponent={() => (
                             <Text style={styles.count}>Total: {count}</Text>
                         )}
@@ -183,6 +186,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         color: "lightgray",
     },
+    sortingOption: {
+        fontSize: 20,
+    },
     sortBar: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -191,7 +197,6 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     button: {
-        backgroundColor: "cornflowerblue",
         padding: 10,
         borderRadius: 5,
     },
