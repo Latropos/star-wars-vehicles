@@ -9,22 +9,22 @@ const Stack = createStackNavigator();
 
 //---------------------------------
 export default function VehicleStack({ navigation }: any) {
-    return (
-        <Stack.Navigator
-            initialRouteName="MovieStack"
-            screenOptions={{
-                cardStyle: { backgroundColor: colors.backgroundColor },
-            }}
-        >
-            <Stack.Screen
-                name="MovieListScreen"
-                component={MovieListScreen}
-                options={{
-                    headerTitle: () => <Text>Movies</Text>,
-                    headerLeft: () => <MenuButton navigation={navigation} />,
-                }}
-            />
-            <Stack.Screen name="Animation" component={OpeningCrawl} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator
+      initialRouteName="MovieStack"
+      screenOptions={{
+        cardStyle: { backgroundColor: colors.backgroundColor },
+      }}
+    >
+      <Stack.Screen
+        name="MovieListScreen"
+        component={MovieListScreen}
+        options={{
+          headerTitle: () => <Text>Movies</Text>,
+          headerLeft: () => <MenuButton navigation={navigation} />,
+        }}
+      />
+      <Stack.Screen name="Animation" component={OpeningCrawl} />
+    </Stack.Navigator>
+  );
 }

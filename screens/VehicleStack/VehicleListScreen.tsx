@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    TouchableOpacity,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { getVehiclesListAndCount } from "../../utils/fetchApi";
 import service from "../../utils/service";
@@ -14,201 +14,195 @@ import { Vehicle, VehicleList } from "../../utils/types";
 import { AppStateContext } from "../../utils/cache";
 
 interface ItemProps {
-    item: Vehicle;
-    onPress: () => void;
-    color: string;
+  item: Vehicle;
+  onPress: () => void;
+  color: string;
 }
 
 const Item = ({ item, onPress, color }: ItemProps) =>
-    item === undefined ? (
-        <Text></Text>
-    ) : (
-        <TouchableOpacity
-            onPress={onPress}
-            style={[
-                styles.item,
-                {
-                    backgroundColor: color,
-                },
-            ]}
-        >
-            <Text style={[styles.title]}>{item.name}</Text>
-        </TouchableOpacity>
-    );
+  item === undefined ? (
+    <Text></Text>
+  ) : (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        styles.item,
+        {
+          backgroundColor: color,
+        },
+      ]}
+    >
+      <Text style={[styles.title]}>{item.name}</Text>
+    </TouchableOpacity>
+  );
 
 //#region -------------------------------------------------
 export default function VehicleListScreen({ route, navigation }: Props) {
-    const [data, setData] = useState<VehicleList>([]);
-    const [count, setCount] = useState(0);
-    const [page, setPage] = useState(1);
-    const [errorMessage, setErrorMessage] = useState<string>("");
-    const [nextPageExists, setNextPageExists] = useState(true);
+  const [data, setData] = useState<VehicleList>([]);
+  const [count, setCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [nextPageExists, setNextPageExists] = useState(true);
 
-    async function loadThisPage() {
-        setErrorMessage("");
-        try {
-            const { results, numberOfVehicles, hasNextPage } =
-                await getVehiclesListAndCount(page);
+  async function loadThisPage() {
+    setErrorMessage("");
+    try {
+      const { results, numberOfVehicles, hasNextPage } =
+        await getVehiclesListAndCount(page);
 
-            setData(data.concat(results));
-            setCount(numberOfVehicles);
-            setNextPageExists(hasNextPage);
+      setData(data.concat(results));
+      setCount(numberOfVehicles);
+      setNextPageExists(hasNextPage);
 
-            setPage(page + 1);
-        } catch (err) {
-            setErrorMessage("Sorry, we can't fetch your API");
-        }
+      setPage(page + 1);
+    } catch (err) {
+      setErrorMessage("Sorry, we can't fetch your API");
     }
+  }
 
-    useEffect(() => {
-        loadThisPage();
-    }, []);
+  useEffect(() => {
+    loadThisPage();
+  }, []);
 
-    const renderItem = ({ item }: any) => {
-        return (
-            <Item
-                item={item}
-                onPress={() => {
-                    const vehicleId = service.getId(item.url);
-                    if (vehicleId !== undefined)
-                        navigation.navigate("VehicleDetails", {
-                            id: vehicleId,
-                        });
-                }}
-                color="peru"
-            />
-        );
-    };
-
-    function onEndReached() {
-        if (nextPageExists) {
-            loadThisPage();
-        }
-    }
-    //#endregion
-
-    //#region ---------------sorting------------------
-    function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
-        return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
-    }
-    function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
-        return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
-    }
-    function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
-        return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
-    }
-
-    //buttons:
-    function sortByName() {
-        setData(sortVehicleListByName(data));
-    }
-    function sortByLength() {
-        setData(sortVehicleListByLength(data));
-    }
-    function sortByCrew() {
-        setData(sortVehicleListByCrew(data));
-    }
-
-    //#endregion
+  const renderItem = ({ item }: any) => {
     return (
-        <View
-            style={[
-                { padding: 25 },
-                {
-                    transform: [
-                        { rotateX: "45deg" },
-                        { scaleY: 1.2 },
-                        { perspective: 1500 },
-                    ],
-                },
-            ]}
-        >
-            {!!errorMessage && <Text> {errorMessage}</Text>}
-
-            <View>
-                {!data ? (
-                    <ActivityIndicator />
-                ) : (
-                    <FlatList
-                        onEndReached={onEndReached}
-                        onEndReachedThreshold={0.5}
-                        data={data}
-                        ListHeaderComponent={() => (
-                            <View>
-                                <Text style={styles.sortBy}>Sort by:</Text>
-                                <View style={styles.sortBar}>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={sortByName}
-                                    >
-                                        <Text style={styles.title}>Name</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={sortByLength}
-                                    >
-                                        <Text style={styles.title}>Length</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={sortByCrew}
-                                    >
-                                        <Text style={styles.title}>Crew</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        )}
-                        ListFooterComponent={() => (
-                            <Text style={styles.count}>Total: {count}</Text>
-                        )}
-                        keyExtractor={(item, index) =>
-                            item === undefined ? "1" : item.url
-                        }
-                        renderItem={renderItem}
-                    />
-                )}
-            </View>
-        </View>
+      <Item
+        item={item}
+        onPress={() => {
+          const vehicleId = service.getId(item.url);
+          if (vehicleId !== undefined)
+            navigation.navigate("VehicleDetails", {
+              id: vehicleId,
+            });
+        }}
+        color="peru"
+      />
     );
+  };
+
+  function onEndReached() {
+    if (nextPageExists) {
+      loadThisPage();
+    }
+  }
+  //#endregion
+
+  //#region ---------------sorting------------------
+  function sortVehicleListByName(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.name < b.name ? -1 : 1));
+  }
+  function sortVehicleListByLength(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.length < b.length ? -1 : 1));
+  }
+  function sortVehicleListByCrew(vehiclelist: VehicleList): VehicleList {
+    return [...vehiclelist].sort((a, b) => (a.crew < b.crew ? -1 : 1));
+  }
+
+  //buttons:
+  function sortByName() {
+    setData(sortVehicleListByName(data));
+  }
+  function sortByLength() {
+    setData(sortVehicleListByLength(data));
+  }
+  function sortByCrew() {
+    setData(sortVehicleListByCrew(data));
+  }
+
+  //#endregion
+  return (
+    <View
+      style={[
+        { padding: 25 },
+        {
+          transform: [
+            { rotateX: "45deg" },
+            { scaleY: 1.2 },
+            { perspective: 1500 },
+          ],
+        },
+      ]}
+    >
+      {!!errorMessage && <Text> {errorMessage}</Text>}
+
+      <View>
+        {!data ? (
+          <ActivityIndicator />
+        ) : (
+          <FlatList
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.5}
+            data={data}
+            ListHeaderComponent={() => (
+              <View>
+                <Text style={styles.sortBy}>Sort by:</Text>
+                <View style={styles.sortBar}>
+                  <TouchableOpacity style={styles.button} onPress={sortByName}>
+                    <Text style={styles.title}>Name</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={sortByLength}
+                  >
+                    <Text style={styles.title}>Length</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.button} onPress={sortByCrew}>
+                    <Text style={styles.title}>Crew</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+            ListFooterComponent={() => (
+              <Text style={styles.count}>Total: {count}</Text>
+            )}
+            keyExtractor={(item, index) =>
+              item === undefined ? "1" : item.url
+            }
+            renderItem={renderItem}
+          />
+        )}
+      </View>
+    </View>
+  );
 }
 
 //#region---------------styles-------------------
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    sortBy: {
-        marginHorizontal: 16,
-        color: "lightgray",
-    },
-    sortBar: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        marginHorizontal: 16,
-        marginBottom: 16,
-    },
-    button: {
-        backgroundColor: "cornflowerblue",
-        padding: 10,
-        borderRadius: 5,
-    },
-    title: {
-        fontSize: 25,
-        fontWeight: "bold",
-        color: "#03062b",
-    },
-    count: {
-        marginHorizontal: 16,
-        color: "lightgray",
-    },
-    item: {
-        padding: 10,
-        borderRadius: 5,
-        marginVertical: 5,
-        marginHorizontal: 16,
-    },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sortBy: {
+    marginHorizontal: 16,
+    color: "lightgray",
+  },
+  sortBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  button: {
+    backgroundColor: "cornflowerblue",
+    padding: 10,
+    borderRadius: 5,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#03062b",
+  },
+  count: {
+    marginHorizontal: 16,
+    color: "lightgray",
+  },
+  item: {
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+    marginHorizontal: 16,
+  },
 });
 //#endregion
