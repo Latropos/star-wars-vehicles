@@ -9,35 +9,38 @@ import {
 } from "react-native-gesture-handler";
 import { DraggableBox } from "./DraggableBox";
 
-//#region Gesture hanlders
-const doubleTapRef = React.createRef<TapGestureHandler>();
-const tripleTapRef = React.createRef<TapGestureHandler>();
+interface Props {
+  singleTapFunction: () => void;
+  doubleTapFunction: () => void;
+  longPressFunction: () => void;
+}
 
-const onHandlerStateChange = (
-  event: LongPressGestureHandlerStateChangeEvent
-) => {
-  if (event.nativeEvent.state === State.ACTIVE) {
-    alert("Long press");
-  }
-};
-const onSingleTap = (event: TapGestureHandlerStateChangeEvent) => {
-  if (event.nativeEvent.state === State.ACTIVE) {
-    alert("Single tap");
-  }
-};
-const onDoubleTap = (event: TapGestureHandlerStateChangeEvent) => {
-  if (event.nativeEvent.state === State.ACTIVE) {
-    alert("Double tap");
-  }
-};
-const onTrippleTap = (event: TapGestureHandlerStateChangeEvent) => {
-  if (event.nativeEvent.state === State.ACTIVE) {
-    alert("Tripple tap");
-  }
-};
-//#endregion
+// export function SubmitButton({singleTapFunction: () => void) {
+export function SubmitButton({
+  singleTapFunction,
+  doubleTapFunction,
+  longPressFunction,
+}: Props) {
+  const doubleTapRef = React.createRef<TapGestureHandler>();
 
-export function SubmitButton() {
+  function onHandlerStateChange(
+    event: LongPressGestureHandlerStateChangeEvent
+  ) {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      longPressFunction();
+    }
+  }
+  function onSingleTap(event: TapGestureHandlerStateChangeEvent) {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      singleTapFunction();
+    }
+  }
+  function onDoubleTap(event: TapGestureHandlerStateChangeEvent) {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      doubleTapFunction();
+    }
+  }
+
   return (
     <View>
       <LongPressGestureHandler

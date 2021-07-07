@@ -62,7 +62,11 @@ export default function FormScreen() {
         />
       </View>
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
-        <SubmitButton />
+        <SubmitButton
+          singleTapFunction={() => alert("single tap")}
+          doubleTapFunction={() => alert("double tap")}
+          longPressFunction={() => alert("long press")}
+        />
       </View>
     </View>
   );
