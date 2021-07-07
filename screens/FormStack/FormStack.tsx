@@ -9,17 +9,17 @@ const Stack = createStackNavigator();
 
 //#region main
 export default function FormStack({ navigation }: any) {
-    return (
-        <Stack.Navigator initialRouteName="Form">
-            <Stack.Screen
-                name="Form"
-                component={FormScreen}
-                options={{
-                    headerTitle: () => <Text>Vehicles</Text>,
-                    headerLeft: () => <MenuButton navigation={navigation} />,
-                }}
-            />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator initialRouteName="Form">
+      <Stack.Screen
+        name="Form"
+        component={FormScreen}
+        options={{
+          headerTitle: () => <Text>Vehicles</Text>,
+          headerLeft: () => <MenuButton navigation={navigation} />,
+        }}
+      />
+    </Stack.Navigator>
+  );
 }
 //#endregion

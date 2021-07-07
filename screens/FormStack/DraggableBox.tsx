@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Animated, StyleSheet, View, Text, StyleProp } from "react-native";
+import {
+  Animated,
+  StyleSheet,
+  View,
+  Text,
+  StyleProp,
+  InteractionManagerStatic,
+} from "react-native";
 
 import {
   PanGestureHandler,
@@ -7,12 +14,13 @@ import {
   State,
 } from "react-native-gesture-handler";
 
-interface OwnProps {
-  boxStyle?: StyleProp<View>;
-}
+interface OwnProps {}
 
 export class DraggableBox extends Component<OwnProps> {
   _translateX: Animated.Value;
+  _translateY: Animated.Value;
+  _lastOffset: { x: number; y: number };
+  _onGestureEvent: (...args: any[]) => void;
 
   constructor(props: OwnProps) {
     super(props);
@@ -28,7 +36,7 @@ export class DraggableBox extends Component<OwnProps> {
       },
     ]);
   }
-  _onHandlerStateChange = (event) => {
+  _onHandlerStateChange = (event: any) => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       this._lastOffset.x += event.nativeEvent.translationX;
       this._lastOffset.y += event.nativeEvent.translationY;
@@ -54,7 +62,6 @@ export class DraggableBox extends Component<OwnProps> {
                 { translateY: this._translateY },
               ],
             },
-            this.props.boxStyle,
           ]}
         >
           {this.props.children}

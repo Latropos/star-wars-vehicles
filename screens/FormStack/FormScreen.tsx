@@ -1,20 +1,6 @@
 import React, { useState } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  TextInput,
-  Button,
-  TouchableWithoutFeedback,
-} from "react-native";
-import {
-  TapGestureHandler,
-  LongPressGestureHandler,
-  State,
-  LongPressGestureHandlerStateChangeEvent,
-  TapGestureHandlerStateChangeEvent,
-} from "react-native-gesture-handler";
-import { DraggableBox } from "./DraggableBox";
+import { Text, StyleSheet, View, TextInput } from "react-native";
+import { SubmitButton } from "./SubmitButton";
 
 export default function FormScreen() {
   const [character, setCharacter] = useState("");
@@ -22,8 +8,8 @@ export default function FormScreen() {
   const [movie, setMovie] = useState("");
   const [validForm, setValidForm] = useState(false);
 
-  const planetInput = React.createRef();
-  const movieInput = React.createRef();
+  const planetInput = React.createRef<TextInput>();
+  const movieInput = React.createRef<TextInput>();
 
   function validateForm() {
     const formIsValid =
@@ -32,37 +18,10 @@ export default function FormScreen() {
       (planet != "" && movie != "");
     setValidForm(formIsValid);
   }
-  function focusNext(nextInput) {
-    nextInput.current.focus();
+  function focusNext(nextInput: React.RefObject<TextInput>) {
+    nextInput.current?.focus();
   }
 
-  //#region Gesture hanlders
-  const doubleTapRef = React.createRef<TapGestureHandler>();
-  const tripleTapRef = React.createRef<TapGestureHandler>();
-
-  const onHandlerStateChange = (
-    event: LongPressGestureHandlerStateChangeEvent
-  ) => {
-    if (event.nativeEvent.state === State.ACTIVE) {
-      alert("Long press");
-    }
-  };
-  const onSingleTap = (event: TapGestureHandlerStateChangeEvent) => {
-    if (event.nativeEvent.state === State.ACTIVE) {
-      alert("Single tap");
-    }
-  };
-  const onDoubleTap = (event: TapGestureHandlerStateChangeEvent) => {
-    if (event.nativeEvent.state === State.ACTIVE) {
-      alert("Double tap");
-    }
-  };
-  const onTrippleTap = (event: TapGestureHandlerStateChangeEvent) => {
-    if (event.nativeEvent.state === State.ACTIVE) {
-      alert("Tripple tap");
-    }
-  };
-  //#endregion
   return (
     <View style={styles.container}>
       <View style={{ flex: 1, justifyContent: "flex-start" }}>
@@ -103,28 +62,7 @@ export default function FormScreen() {
         />
       </View>
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
-        <LongPressGestureHandler
-          onHandlerStateChange={onHandlerStateChange}
-          minDurationMs={800}
-        >
-          <TapGestureHandler
-            onHandlerStateChange={onSingleTap}
-            waitFor={doubleTapRef}
-            numberOfTaps={1}
-          >
-            <TapGestureHandler
-              ref={doubleTapRef}
-              onHandlerStateChange={onDoubleTap}
-              numberOfTaps={2}
-            >
-              <DraggableBox>
-                <View style={styles.button}>
-                  <Text style={styles.submit}>Submit</Text>
-                </View>
-              </DraggableBox>
-            </TapGestureHandler>
-          </TapGestureHandler>
-        </LongPressGestureHandler>
+        <SubmitButton />
       </View>
     </View>
   );
